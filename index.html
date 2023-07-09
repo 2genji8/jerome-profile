@@ -14,15 +14,15 @@
 	<div class="container">
 		<nav>
 			<img src="images/logo.png" class="logo">
-			<ul>
+			<ul id="sidemenu">
 				<li><a href="#header">Home</a></li>
 				<li><a href="#about">About</a></li>
 				<li><a href="#services">Services</a></li>
 				<li><a href="#portfolio">Porfolio</a></li>
 				<li><a href="#contact">Contact</a></li>
-				<i class="fas fa-times"></i>
+				<i class="fas fa-times" onclick="closemenu()"></i>
 			</ul>
-			<i class="fas fa-bars"></i>
+			<i class="fas fa-bars" onclick="openmenu()"></i>
 		</nav>
 	<div class="header-text">
 		<p>Virtual Assistant/ Graphic Designer</p>
@@ -30,7 +30,7 @@
 		<h1>Hi, I'm <span>Jerome</span><br>From Philippines</h1>
 	</div>
 </div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-</body>
+
 	<div id= "about">
 	<div class="container">
 		<div class="row">
@@ -197,8 +197,18 @@ Being an expert in Data entry because of using it for almost 5 years of working 
       .catch(error => console.error('Error!', error.message))
   })
 </script>
+<script>
+	var sidemeu = document.getElementId("sidemenu")
 
-
+	function openmenu(){
+			sidemeu.style.right = "0";
+	}
+	function closemenu(){
+			sidemeu.style.right = "-200px";
+	}
+	
+</script>
+</body>
 </html>
 
 
