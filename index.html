@@ -5,127 +5,214 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Jerome's Porfolio</title>
-	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="styles.css"> 
 	<script src="https://kit.fontawesome.com/c4254e24a8.js" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelvr.net/npm/swiper@9/swiper-bundle.min.css" /> 
+ 	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
 <body>
 
-<div id="header">
-	<div class="container">
-		<nav>
-			<img src="images/logo.png" class="logo">
-			<ul id="sidemenu">
-				<li><a href="#header">Home</a></li>
-				<li><a href="#about">About</a></li>
-				<li><a href="#services">Services</a></li>
-				<li><a href="#portfolio">Porfolio</a></li>
-				<li><a href="#contact">Contact</a></li>
-				<i class="fas fa-times" onclick="closemenu()"></i>
-			</ul>
-			<i class="fas fa-bars" onclick="openmenu()"></i>
-		</nav>
-	<div class="header-text">
-		<p>Virtual Assistant/ Graphic Designer</p>
-		
-		<h1>Hi, I'm <span>Jerome</span><br>From Philippines</h1>
-	</div>
-</div><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
 
-	<div id= "about">
-	<div class="container">
-		<div class="row">
-			<div class="about-col-1">
-				<img src="images/user.png">
-			</div>
-			<div class="about-col-2">
-				<h1 class="sub-title">About Me</h1>
-				<p>I am Jerome Mendoza a solo Freelancer from the Philippines.
+    <header class="header">
+        <a href="#" class="logo">Portfolio.</a>   
+        <nav class="navbar">
+            <a href="#home" class="active">Home</a> 
+            <a href="#about">About</a>
+            <a href="#services">Services</a> 
+            <a href="#portfolio">Portfolio</a> 
+            <a href="#contact">Contact</a> 
+        </nav>  
+	<div class="bx bx-moon" id="darkMode-icon"></div>
+	<div class="bx bx-menu" id="menu-icon"></div>
+
+    </header>
+
+<section class="home" id="home">
+	<div class="home-content">
+		<h3>Hello, I am </h3>
+		<h1>Jerome Mendoza</h1>
+		<p>I am Jerome Mendoza a solo Freelancer from the Philippines.
 Being an expert in Data entry because of using it for almost 5 years of working experience in local companies here in the Philippines. I became flexible in different things, I will show you the main focus of my knowledge when it comes to these are the list of my data entry skills</p>
-
-			<div class="tab-titles">
-			<p class="tab-links active-link" onclick="opentab('skills')">Skills</p>
-			<p class="tab-links" onclick="opentab('experience')">Experience</p>
-			<p class="tab-links" onclick="opentab('education')">Education</p>
-			</div>
-			<div class="tab-contents active-tab" id="skills">
-				<ul>
-					<li><span>Programming</span><br>Knowledge in HTML, CSS ,Php ,Java </li>
-					<li><span>Graphic Designer</span><br>Knowledge in Photoshop,Flash, Premiere Pro.</li>
-					<li><span>Data Entry</span><br>Proficient in Microsoft Office, Google Apps</li>
-				</ul>	
-			</div>
-			<div class="tab-contents" id="experience">
-				<ul>
-					<li><span>2020-2023</span><br>Administrative Assistant II</li>
-					<li><span>2021-2022</span><br>Job Board Manager</li>
-					<li><span>2020-2022</span><br>Graphic Designer</li>
-				</ul>	
-			</div>
-			<div class="tab-contents" id="education">
-				<ul>
-					<li><span>2013-2015</span><br>Information and Communication, Technology</li>
-					<li><span>2008</span><br>Victory Elijah School System</li>
-				</ul>	
-			</div>
-			</div>
+		<div class="social-media">
+			<a href="#"><i class='bx bxl-facebook' ></i></a>
+			<a href="#"><i class='bx bxl-twitter' ></i></a>
+			<a href="#"><i class='bx bxl-instagram-alt' ></i></a>
+			<a href="#"><i class='bx bxl-linkedin' ></i></a>				
 		</div>
-	</div>
-	</div><br><br><br>
-
-<div id="services">
-	<div class="container">
-		<h1 class="sub-title">My Services</h1>
-		<div class="services-list">
-		<div>
-			<h2>Frontend Developer</h2>
-			<p>Develop user interface of a website using HTML, CSS and Java.</p>
-			<a href="#">learn more</a>
-		</div>	
-		<div>
-			<h2>Virtual Assistant</h2>
-			<p>Provide Administrative services to client such as email management and data entry. </p>
-			<a href="#">learn more</a>
-		</div>	
-		<div>
-			<h2>Graphic Design</h2>
-			<p>Provide design accordingly to client needs and want</p>
-			<a href="#">learn more</a>
-		</div>	
-
-		</div>
-	</div>
-</div><br><br><br>
-
-
-<div id="portfolio">
-	<div class="container">
-	<h1 class="sub-title">My Work</h1>
-	<div class="work-list">
-		<div class="work">
-			<img src="images/work-1.png">
-			<div class="layer">
-				<h3>Social Media Manager</h3>
-				<p>Manage social media post</p>
-			</div>
-		</div>
-		<div class="work">
-			<img src="images/work-2.png">
-			<div class="layer">
-				<h3>Computer Services</h3>
-				<p>Repair Computer and Install Software</p>
-			</div>
-		</div>
-		<div class="work">
-			<img src="images/work-3.png">
-			<div class="layer">
-				<h3>Logo</h3>
-				<p>Make Graphic Design</p>
-			</div>
-		</div>
-	</div>
+		<a href="images/MENDOZA_CV.pdf" download class="btn">Download CV</a>
 
 	</div>
-</div><br><br><br>
+	<div class="profession-container">
+		<div class="profession-box">
+			<div class="profession" style="--i:0;">
+			<i class='bx bx-code-alt' ></i>
+			<h3>Web Developer</h3>
+			</div>
+			<div class="profession" style="--i:1;">
+			<i class='bx bx-code-alt' ></i>
+			<h3>Virtual Assistant</h3>
+			</div>
+			<div class="profession" style="--i:2;">
+			<i class='bx bx-code-alt' ></i>
+			<h3>Graphic Designer</h3>
+			</div>
+			<div class="profession" style="--i:3;">
+			<i class='bx bx-code-alt' ></i>
+			<h3>Web Designer</h3>
+			</div>
+			<div class="circle"></div>
+
+		</div>
+		<div class="overlay"></div>
+	</div> 
+		<div class="home-img">
+			<img src="user.png" alt="">
+		</div>
+
+
+    </section>
+<section class="about" id="about">
+	<div class="about-img">
+		<img src= "about.png" alt="">
+	</div>
+	<div class="about-content">
+		<h2 class="heading">About <span>Me</span></h2>
+		<h3>Hi, I'm Here to Help Your Next Project!</h3>
+		<p>I am Jerome Mendoza a solo Freelancer from the Philippines.
+Being an expert in Data entry because of using it for almost 5 years of working experience in local companies here in the Philippines. I became flexible in different things, I will show you the main focus of my knowledge when it comes to these are the list of my data entry skills</p>
+		<a href="#" class="btn">Read More</a>
+	</div>
+    </section>
+    <section class="services" id="services">
+	<h2 class="heading">My <span>Services</span></h2>
+
+	<div class="services-container">
+		<div class="services-box">
+			<i class='bx bx-code-alt' ></i>
+			<h3>Web Development </h3>
+			<p>I am Jerome Mendoza a solo Freelancer from the Philippines.
+Being an expert in Data entry because of using it for almost 5 years of working experience in local companies here in the Philippines. I became flexible in different things, I will show you the main focus of my knowledge when it comes to these are the list of my data entry skills</p>
+			<a href="#" class="btn">Read More</a>
+		</div>
+		<div class="services-box">
+			<i class='bx bx-code-alt' ></i>
+			<h3>Virtual Assistant </h3>
+			<p>I am Jerome Mendoza a solo Freelancer from the Philippines.
+Being an expert in Data entry because of using it for almost 5 years of working experience in local companies here in the Philippines. I became flexible in different things, I will show you the main focus of my knowledge when it comes to these are the list of my data entry skills</p>
+			<a href="#" class="btn">Read More</a>
+		</div>
+		<div class="services-box">
+			<i class='bx bx-code-alt' ></i>
+			<h3>Graphic Designer </h3>
+			<p>I am Jerome Mendoza a solo Freelancer from the Philippines.
+Being an expert in Data entry because of using it for almost 5 years of working experience in local companies here in the Philippines. I became flexible in different things, I will show you the main focus of my knowledge when it comes to these are the list of my data entry skills</p>
+			<a href="#" class="btn">Read More</a>
+		</div>
+	</div>
+    </section>	
+    <section class="portfolio" id="portfolio">
+	<h2 class="heading">Latest <span>Project</span></h2>
+	<div class="portfolio-container">
+	<div class="portfolio-box">
+		<img src="portfolio1.png" alt="">
+		<div class="portfolio-layer">
+			<h4>Web Design</h4>
+		<p>loremijkdsjkfdslfjsdlkjfkdsflsdlkfjdlksjflksjfklj</p>
+		<a href="#"><i class='bx bx-link-external'></i></a>
+		</div>
+
+	</div>
+	<div class="portfolio-box">
+		<img src="portfolio2.png" alt="">
+		<div class="portfolio-layer">
+			<h4>Web Design</h4>
+		<p>loremijkdsjkfdslfjsdlkjfkdsflsdlkfjdlksjflksjfklj</p>
+		<a href="#"><i class='bx bx-link-external'></i></a>
+		</div>
+
+	</div>
+	<div class="portfolio-box">
+		<img src="portfolio3.png" alt="">
+		<div class="portfolio-layer">
+			<h4>Web Design</h4>
+		<p>loremijkdsjkfdslfjsdlkjfkdsflsdlkfjdlksjflksjfklj</p>
+		<a href="#"><i class='bx bx-link-external'></i></a>
+		</div>
+
+	</div>
+	<div class="portfolio-box">
+		<img src="portfolio4.png" alt="">
+		<div class="portfolio-layer">
+			<h4>Web Design</h4>
+		<p>loremijkdsjkfdslfjsdlkjfkdsflsdlkfjdlksjflksjfklj</p>
+		<a href="#"><i class='bx bx-link-external'></i></a>
+		</div>
+
+	</div>
+	<div class="portfolio-box">
+		<img src="portfolio5.png" alt="">
+		<div class="portfolio-layer">
+			<h4>Web Design</h4>
+		<p>loremijkdsjkfdslfjsdlkjfkdsflsdlkfjdlksjflksjfklj</p>
+		<a href="#"><i class='bx bx-link-external'></i></a>
+		</div>
+
+	</div>
+	<div class="portfolio-box">
+		<img src="portfolio6.png" alt="">
+		<div class="portfolio-layer">
+			<h4>Web Design</h4>
+		<p>loremijkdsjkfdslfjsdlkjfkdsflsdlkfjdlksjflksjfklj</p>
+		<a href="#"><i class='bx bx-link-external'></i></a>
+		</div>
+
+	</div>
+	</div>
+    </section>	
+	<div class="testimonial-container">
+		<h2 class="heading">Valuable <span>Testimonial</span></h2>
+		<div class="testimonial-wrapper">
+ 			<div class="testimonial-box mySwiper">
+				<div class="testimonial-content swiper-wrapper">
+				<div class="testimonial-slide swiper-slide">
+					<img src="testimonial1.png" alt"">
+					<h3>Jerome Mendoza</h3>
+					<p>Lwaoeduysgcjhgsdhjfgiuysayfcioudshjcvbshjvhsad</p>
+				</div>
+ 				<div class="testimonial-slide swiper-slide">
+					<img src="testimonial1.png" alt"">
+					<h3>Jerome </h3>
+					<p>Lwaoeduysgcjhgsdhjfgiuysayfcioudshjcvbshjvhsad</p>
+				</div>
+				<div class="testimonial-slide swiper-slide">
+					<img src="testimonial1.png" alt"">
+					<h3> Mendoza</h3>
+					<p>Lwaoeduysgcjhgsdhjfgiuysayfcioudshjcvbshjvhsad</p>
+				</div>
+				</div>
+				<div class="swiper-button-next"></div>
+				<div class="swiper-button-prev"></div>
+				<div class="swiper-pagination"></div>
+			</div>
+		</div>
+	</ div>
+	<section class="contact" id="contact">
+	<h2 class="heading">Contact <span>Me!</span></h2>
+	<form name="submit-to-google-sheet">
+		<div class="input-box">
+			<input type="text" name="Name" placeholder="Full Name">
+			<input type="email"  name="Email" placeholder="Email Address">
+		</div>
+		<div class="input-box">
+			<input type="number" placeholder="Mobile Number">
+			<input type="text" placeholder="Email Subject">
+		</div>
+		<textarea name="" id="" cols="30" rows="10" placeholder="Your Message"></textarea>
+		<input type="submit" value="Send Message" class="btn">
+	</form>
+	<span id="msg"></span>
+       </section>
+	
 
 <div id="contact">
 	<div class="container">
@@ -134,28 +221,25 @@ Being an expert in Data entry because of using it for almost 5 years of working 
 				<h1 class="sub-title">Contact Me</h1>
 				<p><i class="fas fa-paper-plane"></i>2genji8@gmail.com</p>
 				<p><i class="fas fa-phone-square-alt"></i>+639673355007</p>
-				<div class="social-icons">
-					<a href="https://www.facebook.com/2genji8/"><i class="fab fa-facebook"></i></a>
-					<a href="https://twitter.com/ironmanknows"><i class="fab fa-twitter-square"></i></a>
-					<a href="https://www.instagram.com/2genji8/"><i class="fab fa-instagram"></i></a>
-					<a href="https://www.linkedin.com/in/jerome-mendoza-653292107/"><i class="fab fa-linkedin"></i></a>
-				</div>
-				<a href="images/MENDOZA_CV.pdf" download class="btn">Download CV</a>
-			</div>
-			<div class="contact-right">
-				<form name="submit-to-google-sheet">
-					<input type="text" name="Name" placeholder="Your Name" required>
-					<input type="email" name="Email" placeholder="Your Email" required>	
-					<textarea name="Message" rows="6" placeholder="Your Message"></textarea>
-					<button type="submit" class="btn">Submit</button>
-				</form>
-			<span id="msg"></span>
-			</div>
-		</div>
-	</div>		
-					
-</div>
 
+</div>
+</div>
+</div>
+</div>							
+ <footer class="footer">
+	<div class="footer-text">
+		<p>Copyright &copy; 2023 by Codehal | All Rights Reserved.</p>
+	</div>
+	<div class="footer-iconTop">
+		<a href="#home"><i class='bx bx-up-arrow-alt'></i></a>
+	</div>
+    </footer>
+    
+    <script src="https://unpkg.com/scrollreveal"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
+      
+    <script src="script.js"></script>
 
 
 
@@ -181,7 +265,7 @@ Being an expert in Data entry because of using it for almost 5 years of working 
 <script>
   const scriptURL = 'https://script.google.com/macros/s/AKfycbzekIWM07AzKY2eK7f2Mq8QWbf8WOZokUZjS2TlUotJZT2jdqvyNcFAriNdyuXIhs9N/exec'
   const form = document.forms['submit-to-google-sheet']
-  const msg= document.getElementById("msg")
+  const msg = document.getElementById("msg")
 
   form.addEventListener('submit', e => {
     e.preventDefault()
@@ -196,17 +280,7 @@ Being an expert in Data entry because of using it for almost 5 years of working 
       .catch(error => console.error('Error!', error.message))
   })
 </script>
-<script>
-	var sidemeu = document.getElementById("sidemenu")
 
-	function openmenu(){
-			sidemeu.style.right = "0";
-	}
-	function closemenu(){
-			sidemeu.style.right = "-200px";
-	}
-	
-</script>
 </body>
 </html>
 
