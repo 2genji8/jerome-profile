@@ -232,6 +232,7 @@ section {
   left: 0;
   transform: rotate(calc(360deg / 4 * var(--i)));
   transform-origin: 384px;
+  background: var(--bg-color);
   padding: 13px 0;
 
 }
