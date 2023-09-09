@@ -281,8 +281,6 @@ section {
  position: absolute;
  bottom: 0;
  right: 0;
- height: 90%;
- left: 60%;
  width: 100;
  pointer-events: none;
 }
