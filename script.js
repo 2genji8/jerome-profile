@@ -14,7 +14,7 @@
  window.onscroll = () => {
 	sections.forEach(sec => {
 	  let top = window.scrollY;
-	  let offset = sec.offsetTop -150;
+	  let offset = sec.offsetTop - 150;
 	  let height = sec.offsetHeight;
 	  let id = sec.getAttribute('id');
 	
@@ -28,7 +28,14 @@
 	});
  let header = document.querySelector('.header');
 
- header.classList.toggle('sticky', window.scrollY>100);
+ header.classList.toggle('sticky', window.scrollY > 100);
+
+	menuIcon.classList.remove('bx-x');
+	navbar.classList.remove('active');
+
+
+
+
 };
  var swiper = new Swiper(".mySwiper", {
 	slidesPerView: 1,
