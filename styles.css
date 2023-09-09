@@ -185,8 +185,8 @@ section {
   top: 50%;
   right: 0;
   transform: translateY(-50%);
-  width: 768px;
-  height: 768px;
+  width: 962px;
+  height: 962px;
   overflow: hidden;
   pointer-events: none;
   background: #fff;
@@ -196,8 +196,8 @@ section {
   position: absolute;
   top: 0;
   right: 0;
-  width: 768px;
-  height: 768px;
+  width: 962px;
+  height: 962px;
   border-radius: 50%;
   display: flex;
   justify-content: center;
@@ -232,7 +232,7 @@ section {
   color: var(--main-color);	
   left: 0;
   transform: rotate(calc(360deg / 4 * var(--i)));
-  transform-origin: 384px;
+  transform-origin: 481px;
   background: var(--bg-color);
   padding: 13px 0;
 
@@ -260,8 +260,8 @@ section {
 }
 
 .home .profession-box .circle {
-  width: 384px; 
-  height: 384px;
+  width: 481px; 
+  height: 481px;
   border: 3px solid var(--main-color);
   border-radius: 50%;
 }
@@ -272,10 +272,10 @@ section {
   right: 0;
   width: 0;
   height: 0;
-  border-top: 384px solid var(--main-color);
-  border-right: 384px solid var(--main-color);
-  border-bottom: 384px solid var(--main-color);
-  border-left: 384px solid transparent;
+  border-top: 481px solid var(--main-color);
+  border-right: 481px solid var(--main-color);
+  border-bottom: 481px solid var(--main-color);
+  border-left: 481px solid transparent;
 }                          
 
 .home-img img {
