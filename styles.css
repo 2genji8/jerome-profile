@@ -189,6 +189,7 @@ section {
   height: 768px;
   overflow: hidden;
   pointer-events: none;
+  background: #fff;
 }
 
 .home .profession-container .profession-box {
