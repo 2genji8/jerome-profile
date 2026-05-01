@@ -1,0 +1,2209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#0ea5e9">
+<title>Mr. Labandero – Laundry Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blue: #0ea5e9;
+  --blue-dark: #0284c7;
+  --blue-deeper: #0369a1;
+  --aqua: #06b6d4;
+  --aqua-light: #67e8f9;
+  --teal: #14b8a6;
+  --white: #ffffff;
+  --off-white: #f0f9ff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+  --gray-900: #0f172a;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #8b5cf6;
+  --shadow-sm: 0 1px 3px rgba(14,165,233,0.1), 0 1px 2px rgba(14,165,233,0.06);
+  --shadow: 0 4px 6px rgba(14,165,233,0.07), 0 2px 4px rgba(14,165,233,0.06);
+  --shadow-md: 0 10px 15px rgba(14,165,233,0.1), 0 4px 6px rgba(14,165,233,0.05);
+  --shadow-lg: 0 20px 25px rgba(14,165,233,0.1), 0 10px 10px rgba(14,165,233,0.04);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --nav-h: 64px;
+  --bottom-nav-h: 64px;
+  --sidebar-w: 260px;
+  --font: 'Nunito', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--font);
+  background: var(--gray-50);
+  color: var(--gray-800);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== SPLASH ===== */
+#splash {
+  position: fixed; inset: 0;
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 50%, #14b8a6 100%);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+#splash.hide { opacity: 0; transform: scale(1.05); pointer-events: none; }
+.splash-logo {
+  font-family: 'Pacifico', cursive;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  color: white;
+  text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  animation: splashPop 0.8s ease both;
+}
+.splash-icon {
+  font-size: 80px; margin-bottom: 16px;
+  animation: splashBounce 1s ease both;
+}
+.splash-tagline {
+  color: rgba(255,255,255,0.85);
+  font-size: 1rem; font-weight: 600; margin-top: 8px;
+  animation: splashFade 1s 0.4s ease both;
+}
+.splash-loader {
+  width: 50px; height: 4px;
+  background: rgba(255,255,255,0.3);
+  border-radius: 99px; margin-top: 32px; overflow: hidden;
+  animation: splashFade 1s 0.4s ease both;
+}
+.splash-loader-bar {
+  height: 100%; background: white; border-radius: 99px;
+  animation: loadBar 1.8s ease both;
+}
+@keyframes splashPop { from { opacity:0; transform: scale(0.5) translateY(20px); } to { opacity:1; transform: scale(1) translateY(0); } }
+@keyframes splashBounce { 0% { transform: translateY(-40px); opacity:0; } 60% { transform: translateY(8px); } 100% { transform: translateY(0); opacity:1; } }
+@keyframes splashFade { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+@keyframes loadBar { from { width: 0; } to { width: 100%; } }
+
+/* ===== AUTH ===== */
+#authPage {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0ea5e9 0%, #06b6d4 60%, #14b8a6 100%);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; display: none;
+}
+.auth-card {
+  background: white; border-radius: var(--radius-xl);
+  padding: 40px 32px; width: 100%; max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  animation: cardSlideUp 0.5s ease both;
+}
+@keyframes cardSlideUp { from { opacity:0; transform: translateY(30px); } to { opacity:1; transform: translateY(0); } }
+.auth-logo { text-align: center; margin-bottom: 24px; }
+.auth-logo-icon { font-size: 56px; display: block; }
+.auth-logo h1 { font-family: 'Pacifico', cursive; font-size: 2rem; color: var(--blue); }
+.auth-logo p { color: var(--gray-500); font-size: 0.85rem; margin-top: 4px; }
+.auth-welcome { text-align: center; margin-bottom: 28px; }
+.auth-welcome h2 { font-size: 1.2rem; font-weight: 800; color: var(--gray-800); }
+.auth-welcome p { font-size: 0.85rem; color: var(--gray-500); margin-top: 4px; }
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--gray-600); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
+.form-control {
+  width: 100%; padding: 12px 16px;
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius); font-family: var(--font);
+  font-size: 0.95rem; color: var(--gray-800);
+  transition: all 0.2s;
+  background: var(--gray-50);
+}
+.form-control:focus { outline: none; border-color: var(--blue); background: white; box-shadow: 0 0 0 4px rgba(14,165,233,0.12); }
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  padding: 12px 20px; border-radius: var(--radius);
+  font-family: var(--font); font-size: 0.9rem; font-weight: 700;
+  cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap;
+  text-decoration: none;
+}
+.btn-primary { background: linear-gradient(135deg, var(--blue), var(--aqua)); color: white; }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(14,165,233,0.4); }
+.btn-secondary { background: var(--gray-100); color: var(--gray-700); }
+.btn-secondary:hover { background: var(--gray-200); }
+.btn-success { background: linear-gradient(135deg, #22c55e, #16a34a); color: white; }
+.btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(34,197,94,0.4); }
+.btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+.btn-danger:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(239,68,68,0.4); }
+.btn-warning { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+.btn-outline { background: transparent; border: 2px solid var(--blue); color: var(--blue); }
+.btn-outline:hover { background: var(--blue); color: white; }
+.btn-sm { padding: 7px 12px; font-size: 0.8rem; }
+.btn-lg { padding: 16px 28px; font-size: 1rem; }
+.btn-full { width: 100%; }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none !important; }
+.auth-demo { margin-top: 16px; text-align: center; font-size: 0.78rem; color: var(--gray-400); }
+.auth-demo span { color: var(--blue); font-weight: 700; }
+
+/* ===== APP LAYOUT ===== */
+#app { display: none; min-height: 100vh; }
+
+/* Top Navbar */
+.top-nav {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--nav-h);
+  background: linear-gradient(90deg, var(--blue-deeper), var(--blue), var(--aqua));
+  display: flex; align-items: center; padding: 0 16px;
+  box-shadow: 0 2px 20px rgba(14,165,233,0.3);
+}
+.nav-menu-btn {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  width: 40px; height: 40px; border-radius: var(--radius-sm);
+  font-size: 1.2rem; cursor: pointer; display: none;
+  align-items: center; justify-content: center; flex-shrink: 0;
+  transition: background 0.2s;
+}
+.nav-menu-btn:hover { background: rgba(255,255,255,0.25); }
+.nav-brand {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Pacifico', cursive; font-size: 1.3rem; color: white;
+  flex: 1; margin-left: 8px;
+}
+.nav-brand-icon { font-size: 1.6rem; }
+.nav-right { display: flex; align-items: center; gap: 8px; }
+.nav-user {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.15); padding: 6px 12px;
+  border-radius: 99px; color: white; font-size: 0.85rem; font-weight: 600;
+}
+.nav-user-avatar {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(255,255,255,0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem;
+}
+.nav-logout-btn {
+  background: rgba(255,255,255,0.15); border: none; color: white;
+  padding: 8px 14px; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 0.82rem; font-weight: 700;
+  cursor: pointer; transition: background 0.2s;
+}
+.nav-logout-btn:hover { background: rgba(255,255,255,0.25); }
+
+/* Sidebar */
+.sidebar {
+  position: fixed; top: var(--nav-h); left: 0;
+  width: var(--sidebar-w); height: calc(100vh - var(--nav-h));
+  background: white; border-right: 1px solid var(--gray-100);
+  overflow-y: auto; z-index: 90;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: var(--shadow-md);
+}
+.sidebar-nav { padding: 12px 0; }
+.nav-section { padding: 8px 12px 4px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-400); }
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px; cursor: pointer;
+  color: var(--gray-600); font-size: 0.9rem; font-weight: 600;
+  border-radius: var(--radius-sm); margin: 2px 8px;
+  transition: all 0.2s; border: none; background: none;
+  width: calc(100% - 16px); text-align: left;
+}
+.nav-item:hover { background: var(--off-white); color: var(--blue); }
+.nav-item.active { background: linear-gradient(135deg, rgba(14,165,233,0.12), rgba(6,182,212,0.12)); color: var(--blue); font-weight: 700; }
+.nav-item .nav-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+.nav-badge { background: var(--danger); color: white; font-size: 0.65rem; font-weight: 800; padding: 2px 7px; border-radius: 99px; margin-left: auto; }
+
+/* Overlay */
+.sidebar-overlay {
+  display: none; position: fixed; inset: 0; z-index: 89;
+  background: rgba(0,0,0,0.4);
+}
+
+/* Main content */
+.main-content {
+  margin-left: var(--sidebar-w);
+  padding: 20px;
+  min-height: calc(100vh - var(--nav-h));
+  transition: margin-left 0.3s;
+}
+
+/* Pages */
+.page { display: none; animation: pageIn 0.3s ease both; }
+.page.active { display: block; }
+@keyframes pageIn { from { opacity:0; transform: translateY(12px); } to { opacity:1; transform: translateY(0); } }
+
+/* Page header */
+.page-header { margin-bottom: 24px; }
+.page-header h1 { font-size: 1.6rem; font-weight: 800; color: var(--gray-800); }
+.page-header p { color: var(--gray-500); font-size: 0.9rem; margin-top: 4px; }
+.page-header-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+/* Cards */
+.card {
+  background: white; border-radius: var(--radius-lg);
+  padding: 20px; box-shadow: var(--shadow);
+  animation: cardFadeIn 0.4s ease both;
+  border: 1px solid rgba(14,165,233,0.06);
+}
+@keyframes cardFadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+
+/* Stats grid */
+.stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; margin-bottom: 24px; }
+.stat-card {
+  background: white; border-radius: var(--radius-lg); padding: 18px;
+  box-shadow: var(--shadow); border: 1px solid rgba(14,165,233,0.08);
+  position: relative; overflow: hidden;
+  animation: cardFadeIn 0.4s ease both;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.stat-card::after {
+  content: ''; position: absolute; top: -20px; right: -20px;
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--accent-color, rgba(14,165,233,0.08));
+}
+.stat-label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); }
+.stat-value { font-size: 1.8rem; font-weight: 900; margin: 4px 0; color: var(--gray-800); }
+.stat-icon { font-size: 1.6rem; margin-bottom: 8px; }
+.stat-sub { font-size: 0.75rem; color: var(--gray-400); }
+
+/* Status badges */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 99px;
+  font-size: 0.73rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px;
+}
+.badge-pending { background: #fef9c3; color: #ca8a04; }
+.badge-washing { background: #dbeafe; color: #1d4ed8; }
+.badge-drying { background: #fed7aa; color: #c2410c; }
+.badge-folding { background: #e9d5ff; color: #7e22ce; }
+.badge-ready { background: #d1fae5; color: #065f46; }
+.badge-delivery { background: #cffafe; color: #0e7490; }
+.badge-delivered { background: #dcfce7; color: #166534; }
+.badge-cancelled { background: #fee2e2; color: #991b1b; }
+.badge-active { background: #d1fae5; color: #065f46; }
+.badge-inactive { background: #f1f5f9; color: #64748b; }
+.badge-low { background: #fef9c3; color: #ca8a04; animation: pulse 2s infinite; }
+.badge-critical { background: #fee2e2; color: #991b1b; animation: pulse 1s infinite; }
+@keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.6; } }
+
+/* Table */
+.table-wrap { overflow-x: auto; border-radius: var(--radius); }
+table { width: 100%; border-collapse: collapse; font-size: 0.87rem; }
+th { padding: 10px 14px; text-align: left; font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-400); background: var(--gray-50); border-bottom: 1px solid var(--gray-100); }
+td { padding: 12px 14px; border-bottom: 1px solid var(--gray-50); vertical-align: middle; }
+tr:hover td { background: var(--off-white); }
+tr:last-child td { border-bottom: none; }
+
+/* Search / Filter bar */
+.filter-bar { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
+.search-input {
+  flex: 1; min-width: 180px; padding: 10px 16px;
+  border: 2px solid var(--gray-200); border-radius: var(--radius);
+  font-family: var(--font); font-size: 0.9rem;
+  transition: all 0.2s; background: white;
+}
+.search-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(14,165,233,0.1); }
+select.form-control, select.filter-select {
+  padding: 10px 16px; border: 2px solid var(--gray-200);
+  border-radius: var(--radius); font-family: var(--font);
+  font-size: 0.9rem; background: white; cursor: pointer;
+  transition: all 0.2s;
+}
+select.form-control:focus, select.filter-select:focus { outline: none; border-color: var(--blue); }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 200;
+  background: rgba(15,23,42,0.5); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center; padding: 16px;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: white; border-radius: var(--radius-xl);
+  width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto;
+  box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+  animation: modalIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes modalIn { from { opacity:0; transform: scale(0.88) translateY(20px); } to { opacity:1; transform: scale(1) translateY(0); } }
+.modal-header {
+  padding: 20px 24px 16px; display: flex; align-items: center;
+  justify-content: space-between; border-bottom: 1px solid var(--gray-100);
+}
+.modal-header h3 { font-size: 1.1rem; font-weight: 800; color: var(--gray-800); }
+.modal-close { background: var(--gray-100); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1rem; color: var(--gray-500); transition: all 0.2s; }
+.modal-close:hover { background: var(--gray-200); color: var(--gray-800); }
+.modal-body { padding: 20px 24px; }
+.modal-footer { padding: 16px 24px; border-top: 1px solid var(--gray-100); display: flex; justify-content: flex-end; gap: 10px; }
+
+/* Toast */
+#toastContainer { position: fixed; top: 80px; right: 16px; z-index: 999; display: flex; flex-direction: column; gap: 8px; }
+.toast {
+  background: white; border-radius: var(--radius);
+  padding: 12px 16px 12px 14px; box-shadow: var(--shadow-lg);
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.87rem; font-weight: 600; min-width: 240px; max-width: 360px;
+  border-left: 4px solid var(--success);
+  animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.toast.error { border-left-color: var(--danger); }
+.toast.warning { border-left-color: var(--warning); }
+.toast.info { border-left-color: var(--blue); }
+@keyframes toastIn { from { opacity:0; transform: translateX(30px); } to { opacity:1; transform: translateX(0); } }
+@keyframes toastOut { to { opacity:0; transform: translateX(30px); height:0; padding:0; margin:0; } }
+
+/* FAB */
+.fab {
+  position: fixed; bottom: calc(var(--bottom-nav-h) + 16px); right: 20px;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--blue), var(--aqua));
+  border: none; color: white; font-size: 1.5rem;
+  cursor: pointer; box-shadow: 0 8px 24px rgba(14,165,233,0.5);
+  z-index: 80; display: none;
+  align-items: center; justify-content: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.fab:hover { transform: scale(1.1); box-shadow: 0 12px 32px rgba(14,165,233,0.6); }
+.fab:active { transform: scale(0.95); }
+
+/* Bottom nav (mobile) */
+.bottom-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  height: var(--bottom-nav-h); background: white;
+  border-top: 1px solid var(--gray-100);
+  box-shadow: 0 -4px 20px rgba(14,165,233,0.1);
+  z-index: 80;
+}
+.bottom-nav-items { display: flex; height: 100%; }
+.bottom-nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: center; gap: 3px; cursor: pointer;
+  font-size: 0.65rem; font-weight: 700; color: var(--gray-400);
+  border: none; background: none; transition: color 0.2s;
+  font-family: var(--font);
+}
+.bottom-nav-item.active { color: var(--blue); }
+.bottom-nav-icon { font-size: 1.2rem; }
+
+/* Form sections */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.form-divider { border: none; border-top: 1px solid var(--gray-100); margin: 20px 0; }
+.form-section-title { font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-400); margin-bottom: 12px; }
+
+/* Checkbox / Toggle */
+.toggle-wrap { display: flex; align-items: center; gap: 10px; }
+.toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
+.toggle input { opacity: 0; width: 0; height: 0; }
+.toggle-slider {
+  position: absolute; inset: 0; background: var(--gray-200);
+  border-radius: 99px; cursor: pointer; transition: 0.3s;
+}
+.toggle-slider:before {
+  content: ''; position: absolute; width: 18px; height: 18px;
+  left: 3px; top: 3px; background: white; border-radius: 50%;
+  transition: 0.3s; box-shadow: var(--shadow-sm);
+}
+.toggle input:checked + .toggle-slider { background: var(--blue); }
+.toggle input:checked + .toggle-slider:before { transform: translateX(20px); }
+.toggle-label { font-size: 0.87rem; font-weight: 600; color: var(--gray-700); }
+
+/* Order card (mobile view) */
+.order-card {
+  background: white; border-radius: var(--radius-lg);
+  padding: 16px; margin-bottom: 12px;
+  box-shadow: var(--shadow); border: 1px solid var(--gray-100);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: cardFadeIn 0.4s ease both;
+}
+.order-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+.order-card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+.order-num { font-size: 0.78rem; font-weight: 700; color: var(--blue); }
+.order-name { font-size: 1rem; font-weight: 800; color: var(--gray-800); }
+.order-service { font-size: 0.82rem; color: var(--gray-500); }
+.order-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; font-size: 0.8rem; color: var(--gray-500); }
+.order-meta span { display: flex; align-items: center; gap: 4px; }
+.order-actions { display: flex; gap: 8px; margin-top: 12px; }
+
+/* Alert */
+.alert { padding: 12px 16px; border-radius: var(--radius); margin-bottom: 16px; font-size: 0.87rem; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+.alert-warning { background: #fef9c3; color: #92400e; border: 1px solid #fde68a; }
+.alert-danger { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+.alert-success { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+.alert-info { background: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+
+/* Print styles */
+@media print {
+  body > *:not(#printArea) { display: none !important; }
+  #printArea { display: block !important; }
+}
+.receipt { font-family: 'Courier New', monospace; font-size: 12px; max-width: 300px; margin: 0 auto; }
+.receipt-header { text-align: center; margin-bottom: 12px; }
+.receipt-divider { border-top: 1px dashed #000; margin: 8px 0; }
+.receipt-row { display: flex; justify-content: space-between; }
+.receipt-total { font-weight: bold; font-size: 14px; }
+
+/* Progress steps */
+.progress-steps { display: flex; align-items: center; gap: 0; margin: 16px 0; overflow-x: auto; padding-bottom: 4px; }
+.progress-step { display: flex; flex-direction: column; align-items: center; flex: 1; min-width: 60px; }
+.step-circle {
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 700; position: relative; z-index: 1;
+}
+.step-circle.done { background: var(--success); color: white; }
+.step-circle.active { background: var(--blue); color: white; box-shadow: 0 0 0 4px rgba(14,165,233,0.2); }
+.step-circle.pending { background: var(--gray-100); color: var(--gray-400); }
+.step-label { font-size: 0.62rem; margin-top: 4px; text-align: center; color: var(--gray-500); font-weight: 600; }
+.step-line { flex: 1; height: 2px; background: var(--gray-200); margin-top: -16px; }
+.step-line.done { background: var(--success); }
+
+/* Tabs */
+.tabs { display: flex; gap: 4px; background: var(--gray-100); border-radius: var(--radius); padding: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+.tab-btn {
+  flex: 1; min-width: 80px; padding: 8px 14px;
+  border: none; background: transparent; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 0.82rem; font-weight: 700;
+  color: var(--gray-500); cursor: pointer; transition: all 0.2s;
+}
+.tab-btn.active { background: white; color: var(--blue); box-shadow: var(--shadow-sm); }
+
+/* Inventory items */
+.inv-item { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--gray-50); }
+.inv-icon { width: 40px; height: 40px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+.inv-info { flex: 1; min-width: 0; }
+.inv-name { font-weight: 700; font-size: 0.9rem; color: var(--gray-800); }
+.inv-detail { font-size: 0.78rem; color: var(--gray-400); margin-top: 2px; }
+.inv-stock { font-weight: 800; font-size: 1rem; text-align: right; }
+
+/* Chart bar */
+.chart-bar { display: flex; align-items: flex-end; gap: 8px; height: 120px; margin-top: 12px; }
+.bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; height: 100%; justify-content: flex-end; }
+.bar { border-radius: 4px 4px 0 0; width: 100%; background: linear-gradient(to top, var(--blue), var(--aqua)); min-height: 4px; transition: height 0.6s ease; }
+.bar-label { font-size: 0.65rem; color: var(--gray-400); font-weight: 600; white-space: nowrap; }
+.bar-val { font-size: 0.65rem; color: var(--gray-600); font-weight: 700; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 40px 20px; color: var(--gray-400); }
+.empty-state-icon { font-size: 3rem; margin-bottom: 12px; }
+.empty-state h3 { font-size: 1rem; font-weight: 700; color: var(--gray-500); }
+.empty-state p { font-size: 0.85rem; margin-top: 6px; }
+
+/* Success animation overlay */
+#successOverlay {
+  display: none; position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+}
+#successOverlay.show { display: flex; }
+.success-card {
+  background: white; border-radius: var(--radius-xl); padding: 40px;
+  text-align: center; box-shadow: var(--shadow-lg);
+  animation: successPop 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes successPop { from { opacity:0; transform: scale(0.5); } to { opacity:1; transform: scale(1); } }
+.success-check { font-size: 4rem; animation: checkBounce 0.6s 0.2s cubic-bezier(0.34,1.56,0.64,1) both; }
+@keyframes checkBounce { from { transform: scale(0) rotate(-30deg); } to { transform: scale(1) rotate(0); } }
+
+/* Salary / payroll */
+.payroll-row { background: white; border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; box-shadow: var(--shadow-sm); border: 1px solid var(--gray-100); }
+
+/* Misc helpers */
+.flex { display: flex; }
+.flex-col { display: flex; flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.text-sm { font-size: 0.85rem; }
+.text-xs { font-size: 0.75rem; }
+.font-bold { font-weight: 700; }
+.font-black { font-weight: 900; }
+.text-blue { color: var(--blue); }
+.text-gray { color: var(--gray-500); }
+.text-danger { color: var(--danger); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .nav-menu-btn { display: flex; }
+  .sidebar { transform: translateX(-100%); top: var(--nav-h); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.show { display: block; }
+  .main-content { margin-left: 0; padding: 16px 12px 80px; }
+  .bottom-nav { display: block; }
+  .fab { display: flex; }
+  .form-row { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+  .page-header h1 { font-size: 1.3rem; }
+  .nav-user { display: none; }
+}
+@media (max-width: 400px) {
+  .grid-3 { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-icon">🧺</div>
+  <div class="splash-logo">Mr. Labandero</div>
+  <div class="splash-tagline">Laundry Management System</div>
+  <div class="splash-loader"><div class="splash-loader-bar"></div></div>
+</div>
+
+<!-- AUTH PAGE -->
+<div id="authPage">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="auth-logo-icon">🧺</span>
+      <h1>Mr. Labandero</h1>
+      <p>Laundry Management System</p>
+    </div>
+    <div class="auth-welcome">
+      <h2>Welcome Back!</h2>
+      <p>Sign in to manage your laundry business</p>
+    </div>
+    <div class="form-group">
+      <label>Username</label>
+      <input class="form-control" type="text" id="loginUser" placeholder="Enter username" autocomplete="username">
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input class="form-control" type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary btn-full btn-lg" onclick="doLogin()">🔐 Sign In</button>
+    <div class="auth-demo">
+      Admin: <span>admin / admin123</span> &nbsp;|&nbsp; Cashier: <span>cashier / cash123</span>
+    </div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <!-- Top Nav -->
+  <nav class="top-nav">
+    <button class="nav-menu-btn" onclick="toggleSidebar()">☰</button>
+    <div class="nav-brand">
+      <span class="nav-brand-icon">🧺</span>
+      <span>Mr. Labandero</span>
+    </div>
+    <div class="nav-right">
+      <div class="nav-user" id="navUser">
+        <div class="nav-user-avatar" id="navAvatar">A</div>
+        <span id="navUserName">Admin</span>
+      </div>
+      <button class="nav-logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Sidebar overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <div class="nav-section">Main</div>
+      <button class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard">
+        <span class="nav-icon">📊</span> Dashboard
+      </button>
+      <button class="nav-item" onclick="showPage('orders')" data-page="orders">
+        <span class="nav-icon">📋</span> Orders
+        <span class="nav-badge" id="pendingBadge">0</span>
+      </button>
+      <button class="nav-item" onclick="showPage('newOrder')" data-page="newOrder">
+        <span class="nav-icon">➕</span> New Order
+      </button>
+      <button class="nav-item" onclick="showPage('customers')" data-page="customers">
+        <span class="nav-icon">👥</span> Customers
+      </button>
+      <div class="nav-section admin-only">Management</div>
+      <button class="nav-item admin-only" onclick="showPage('inventory')" data-page="inventory">
+        <span class="nav-icon">📦</span> Inventory
+      </button>
+      <button class="nav-item admin-only" onclick="showPage('expenses')" data-page="expenses">
+        <span class="nav-icon">💸</span> Expenses
+      </button>
+      <button class="nav-item admin-only" onclick="showPage('reports')" data-page="reports">
+        <span class="nav-icon">📈</span> Reports
+      </button>
+      <div class="nav-section admin-only">Human Resources</div>
+      <button class="nav-item admin-only" onclick="showPage('staff')" data-page="staff">
+        <span class="nav-icon">👤</span> Staff
+      </button>
+      <button class="nav-item admin-only" onclick="showPage('attendance')" data-page="attendance">
+        <span class="nav-icon">🕐</span> Attendance
+      </button>
+      <button class="nav-item admin-only" onclick="showPage('payroll')" data-page="payroll">
+        <span class="nav-icon">💰</span> Payroll
+      </button>
+      <div class="nav-section admin-only">Config</div>
+      <button class="nav-item admin-only" onclick="showPage('services')" data-page="services">
+        <span class="nav-icon">⚙️</span> Services
+      </button>
+      <button class="nav-item admin-only" onclick="showPage('settings')" data-page="settings">
+        <span class="nav-icon">🔧</span> Settings
+      </button>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main-content" id="mainContent">
+    <!-- DASHBOARD -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <h1 id="dashGreeting">Good Morning! 👋</h1>
+        <p id="dashDate">Loading date...</p>
+      </div>
+      <div class="stats-grid" id="dashStats"></div>
+      <div class="grid-2">
+        <div class="card">
+          <div style="font-weight:800;font-size:0.95rem;margin-bottom:16px;color:var(--gray-700)">📊 Weekly Sales</div>
+          <div class="chart-bar" id="weeklySalesChart"></div>
+        </div>
+        <div class="card">
+          <div style="font-weight:800;font-size:0.95rem;margin-bottom:12px;color:var(--gray-700)">📋 Recent Orders</div>
+          <div id="recentOrdersList"></div>
+        </div>
+      </div>
+      <div class="card mt-4">
+        <div style="font-weight:800;font-size:0.95rem;margin-bottom:12px;color:var(--gray-700)">⚠️ Inventory Alerts</div>
+        <div id="invAlerts"></div>
+      </div>
+    </div>
+
+    <!-- ORDERS -->
+    <div class="page" id="page-orders">
+      <div class="page-header-row">
+        <div class="page-header">
+          <h1>📋 Orders</h1>
+          <p>Manage all laundry orders</p>
+        </div>
+        <button class="btn btn-primary" onclick="showPage('newOrder')">➕ New Order</button>
+      </div>
+      <div class="filter-bar">
+        <input class="search-input" type="text" placeholder="🔍 Search by name or order #..." id="orderSearch" oninput="renderOrders()">
+        <select class="filter-select" id="orderStatusFilter" onchange="renderOrders()">
+          <option value="">All Statuses</option>
+          <option value="Pending">Pending</option>
+          <option value="Washing">Washing</option>
+          <option value="Drying">Drying</option>
+          <option value="Folding">Folding</option>
+          <option value="Ready for Pickup">Ready for Pickup</option>
+          <option value="Out for Delivery">Out for Delivery</option>
+          <option value="Delivered">Delivered</option>
+          <option value="Cancelled">Cancelled</option>
+        </select>
+      </div>
+      <div id="ordersList"></div>
+    </div>
+
+    <!-- NEW ORDER -->
+    <div class="page" id="page-newOrder">
+      <div class="page-header">
+        <h1>➕ New Order</h1>
+        <p>Create a new laundry order</p>
+      </div>
+      <div class="card">
+        <div class="form-section-title">Order Info</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Order Number</label>
+            <input class="form-control" id="newOrderNum" readonly style="background:var(--gray-50);font-weight:700;color:var(--blue)">
+          </div>
+          <div class="form-group">
+            <label>Date</label>
+            <input class="form-control" type="date" id="newOrderDate">
+          </div>
+        </div>
+        <hr class="form-divider">
+        <div class="form-section-title">Customer Info</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Customer Name *</label>
+            <input class="form-control" type="text" id="newCustName" placeholder="Full name" list="custNameList">
+            <datalist id="custNameList"></datalist>
+          </div>
+          <div class="form-group">
+            <label>Contact Number</label>
+            <input class="form-control" type="tel" id="newCustContact" placeholder="09xx-xxx-xxxx">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input class="form-control" type="text" id="newCustAddress" placeholder="Street, Barangay, City">
+        </div>
+        <hr class="form-divider">
+        <div class="form-section-title">Service Details</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Service Type *</label>
+            <select class="form-control" id="newServiceType" onchange="calcOrderPrice()">
+              <option value="">Select service...</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Weight (kg)</label>
+            <input class="form-control" type="number" id="newWeight" placeholder="0.0" step="0.5" min="0" oninput="calcOrderPrice()">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Pickup Date</label>
+            <input class="form-control" type="date" id="newPickupDate">
+          </div>
+          <div class="form-group">
+            <label>Delivery Date</label>
+            <input class="form-control" type="date" id="newDeliveryDate">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Rush Order?</label>
+            <div class="toggle-wrap mt-2">
+              <label class="toggle"><input type="checkbox" id="newRush" onchange="calcOrderPrice()"><span class="toggle-slider"></span></label>
+              <span class="toggle-label">Yes, Rush</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Delivery?</label>
+            <div class="toggle-wrap mt-2">
+              <label class="toggle"><input type="checkbox" id="newDelivery" onchange="calcOrderPrice()"><span class="toggle-slider"></span></label>
+              <span class="toggle-label">Yes, Deliver</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Special Items</label>
+          <select class="form-control" id="newSpecialItem" onchange="calcOrderPrice()">
+            <option value="">None</option>
+            <option value="Comforter">Comforter</option>
+            <option value="Shoes">Shoes (pair)</option>
+            <option value="Curtains">Curtains</option>
+            <option value="Bags">Bags</option>
+            <option value="Other">Other Bulky Item</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea class="form-control" id="newNotes" rows="2" placeholder="Special instructions, allergies, etc."></textarea>
+        </div>
+        <hr class="form-divider">
+        <div class="card" style="background:var(--off-white);border:2px solid var(--blue);margin-bottom:16px;">
+          <div style="font-size:0.8rem;font-weight:700;color:var(--gray-500);text-transform:uppercase;margin-bottom:8px;">Price Summary</div>
+          <div id="priceSummary" style="font-size:0.9rem;color:var(--gray-700);line-height:2;"></div>
+          <div style="border-top:2px solid var(--blue);padding-top:10px;margin-top:8px;display:flex;justify-content:space-between;align-items:center;">
+            <span style="font-weight:800;font-size:1rem;color:var(--gray-700)">TOTAL</span>
+            <span style="font-size:1.5rem;font-weight:900;color:var(--blue)" id="orderTotal">₱0.00</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button class="btn btn-primary btn-lg" onclick="submitOrder()" style="flex:1">✅ Create Order</button>
+          <button class="btn btn-secondary" onclick="clearNewOrderForm()">🗑️ Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div class="page" id="page-customers">
+      <div class="page-header-row">
+        <div class="page-header"><h1>👥 Customers</h1><p>Customer database & history</p></div>
+        <button class="btn btn-primary" onclick="openCustomerModal()">➕ Add Customer</button>
+      </div>
+      <div class="filter-bar">
+        <input class="search-input" type="text" id="custSearch" placeholder="🔍 Search customers..." oninput="renderCustomers()">
+      </div>
+      <div id="customersList"></div>
+    </div>
+
+    <!-- INVENTORY -->
+    <div class="page admin-only" id="page-inventory">
+      <div class="page-header-row">
+        <div class="page-header"><h1>📦 Inventory</h1><p>Track supplies and stock levels</p></div>
+        <button class="btn btn-primary" onclick="openInventoryModal()">➕ Add Item</button>
+      </div>
+      <div id="inventoryList"></div>
+    </div>
+
+    <!-- EXPENSES -->
+    <div class="page admin-only" id="page-expenses">
+      <div class="page-header-row">
+        <div class="page-header"><h1>💸 Expenses</h1><p>Track business expenses</p></div>
+        <button class="btn btn-primary" onclick="openExpenseModal()">➕ Add Expense</button>
+      </div>
+      <div class="tabs" id="expTabs">
+        <button class="tab-btn active" onclick="filterExpenses('')">All</button>
+        <button class="tab-btn" onclick="filterExpenses('Utilities')">Utilities</button>
+        <button class="tab-btn" onclick="filterExpenses('Supplies')">Supplies</button>
+        <button class="tab-btn" onclick="filterExpenses('Salaries')">Salaries</button>
+        <button class="tab-btn" onclick="filterExpenses('Rent')">Rent</button>
+        <button class="tab-btn" onclick="filterExpenses('Misc')">Misc</button>
+      </div>
+      <div id="expensesList"></div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="page admin-only" id="page-reports">
+      <div class="page-header"><h1>📈 Reports</h1><p>Sales & business analytics</p></div>
+      <div class="tabs">
+        <button class="tab-btn active" onclick="showReport('daily')">Daily</button>
+        <button class="tab-btn" onclick="showReport('weekly')">Weekly</button>
+        <button class="tab-btn" onclick="showReport('monthly')">Monthly</button>
+        <button class="tab-btn" onclick="showReport('services')">Services</button>
+        <button class="tab-btn" onclick="showReport('inventory')">Inventory</button>
+      </div>
+      <div id="reportContent"></div>
+    </div>
+
+    <!-- STAFF -->
+    <div class="page admin-only" id="page-staff">
+      <div class="page-header-row">
+        <div class="page-header"><h1>👤 Staff</h1><p>Manage user accounts</p></div>
+        <button class="btn btn-primary" onclick="openStaffModal()">➕ Add Staff</button>
+      </div>
+      <div id="staffList"></div>
+    </div>
+
+    <!-- ATTENDANCE -->
+    <div class="page admin-only" id="page-attendance">
+      <div class="page-header"><h1>🕐 Attendance</h1><p>Time in/out tracking</p></div>
+      <div class="card mb-4">
+        <div class="form-section-title">Clock In / Out</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Staff Member</label>
+            <select class="form-control" id="attendStaff"></select>
+          </div>
+          <div class="form-group" style="display:flex;align-items:flex-end;gap:8px;">
+            <button class="btn btn-success btn-full" onclick="clockAction('in')">🟢 Time In</button>
+            <button class="btn btn-danger btn-full" onclick="clockAction('out')">🔴 Time Out</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div style="font-weight:800;font-size:0.95rem;margin-bottom:12px;color:var(--gray-700)">Attendance Logs</div>
+        <div id="attendanceLogs"></div>
+      </div>
+    </div>
+
+    <!-- PAYROLL -->
+    <div class="page admin-only" id="page-payroll">
+      <div class="page-header"><h1>💰 Payroll</h1><p>Staff salary computation</p></div>
+      <div id="payrollContent"></div>
+    </div>
+
+    <!-- SERVICES -->
+    <div class="page admin-only" id="page-services">
+      <div class="page-header-row">
+        <div class="page-header"><h1>⚙️ Services</h1><p>Manage laundry services & pricing</p></div>
+        <button class="btn btn-primary" onclick="openServiceModal()">➕ Add Service</button>
+      </div>
+      <div id="servicesList"></div>
+    </div>
+
+    <!-- SETTINGS -->
+    <div class="page admin-only" id="page-settings">
+      <div class="page-header"><h1>🔧 Settings</h1><p>Business configuration</p></div>
+      <div class="card">
+        <div class="form-section-title">Business Information</div>
+        <div class="form-group">
+          <label>Business Name</label>
+          <input class="form-control" id="setBizName" type="text">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Contact Number</label>
+            <input class="form-control" id="setBizContact" type="tel">
+          </div>
+          <div class="form-group">
+            <label>Business Hours</label>
+            <input class="form-control" id="setBizHours" type="text" placeholder="e.g. 7AM - 8PM">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Address</label>
+          <input class="form-control" id="setBizAddress" type="text">
+        </div>
+        <div class="form-group">
+          <label>Receipt Footer Message</label>
+          <textarea class="form-control" id="setBizFooter" rows="2"></textarea>
+        </div>
+        <hr class="form-divider">
+        <div class="form-section-title">Pricing Settings</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Minimum Charge (₱)</label>
+            <input class="form-control" id="setMinCharge" type="number" step="5">
+          </div>
+          <div class="form-group">
+            <label>Rush Fee (₱)</label>
+            <input class="form-control" id="setRushFee" type="number" step="5">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Delivery Fee (₱)</label>
+            <input class="form-control" id="setDeliveryFee" type="number" step="5">
+          </div>
+          <div class="form-group">
+            <label>Special Item Fee (₱ each)</label>
+            <input class="form-control" id="setSpecialFee" type="number" step="5">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Bottom Nav (mobile) -->
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <button class="bottom-nav-item active" onclick="showPage('dashboard')" id="bnav-dashboard">
+        <span class="bottom-nav-icon">📊</span>
+        <span>Home</span>
+      </button>
+      <button class="bottom-nav-item" onclick="showPage('orders')" id="bnav-orders">
+        <span class="bottom-nav-icon">📋</span>
+        <span>Orders</span>
+      </button>
+      <button class="bottom-nav-item" onclick="showPage('customers')" id="bnav-customers">
+        <span class="bottom-nav-icon">👥</span>
+        <span>Customers</span>
+      </button>
+      <button class="bottom-nav-item admin-only" onclick="showPage('reports')" id="bnav-reports">
+        <span class="bottom-nav-icon">📈</span>
+        <span>Reports</span>
+      </button>
+      <button class="bottom-nav-item admin-only" onclick="showPage('settings')" id="bnav-settings">
+        <span class="bottom-nav-icon">🔧</span>
+        <span>Settings</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- FAB -->
+  <button class="fab" onclick="showPage('newOrder')" title="New Order">➕</button>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="orderModalTitle">Order Details</h3>
+      <button class="modal-close" onclick="closeModal('orderModal')">✕</button>
+    </div>
+    <div class="modal-body" id="orderModalBody"></div>
+    <div class="modal-footer" id="orderModalFooter"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="customerModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add/Edit Customer</h3>
+      <button class="modal-close" onclick="closeModal('customerModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="custModalId">
+      <div class="form-group"><label>Full Name</label><input class="form-control" id="custModalName" type="text"></div>
+      <div class="form-group"><label>Contact Number</label><input class="form-control" id="custModalContact" type="tel"></div>
+      <div class="form-group"><label>Address</label><input class="form-control" id="custModalAddress" type="text"></div>
+      <div class="form-group"><label>Notes</label><textarea class="form-control" id="custModalNotes" rows="2"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('customerModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveCustomer()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="inventoryModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add/Edit Inventory Item</h3>
+      <button class="modal-close" onclick="closeModal('inventoryModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="invModalId">
+      <div class="form-group"><label>Item Name</label><input class="form-control" id="invModalName" type="text"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Quantity</label><input class="form-control" id="invModalQty" type="number" min="0"></div>
+        <div class="form-group"><label>Unit</label><input class="form-control" id="invModalUnit" type="text" placeholder="e.g. kg, pcs, ml"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Low Stock Alert</label><input class="form-control" id="invModalLow" type="number" min="0"></div>
+        <div class="form-group"><label>Cost per Unit (₱)</label><input class="form-control" id="invModalCost" type="number" min="0" step="0.5"></div>
+      </div>
+      <div class="form-group"><label>Supplier</label><input class="form-control" id="invModalSupplier" type="text"></div>
+      <div class="form-group"><label>Emoji Icon</label><input class="form-control" id="invModalIcon" type="text" placeholder="e.g. 🧴"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('inventoryModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveInventoryItem()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="expenseModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add Expense</h3>
+      <button class="modal-close" onclick="closeModal('expenseModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group"><label>Description</label><input class="form-control" id="expModalDesc" type="text"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Category</label>
+          <select class="form-control" id="expModalCat">
+            <option>Utilities</option><option>Supplies</option><option>Salaries</option>
+            <option>Rent</option><option>Transportation</option><option>Misc</option>
+          </select>
+        </div>
+        <div class="form-group"><label>Amount (₱)</label><input class="form-control" id="expModalAmt" type="number" min="0" step="0.5"></div>
+      </div>
+      <div class="form-group"><label>Date</label><input class="form-control" id="expModalDate" type="date"></div>
+      <div class="form-group"><label>Notes</label><textarea class="form-control" id="expModalNotes" rows="2"></textarea></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('expenseModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveExpense()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="serviceModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add/Edit Service</h3>
+      <button class="modal-close" onclick="closeModal('serviceModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="svcModalId">
+      <div class="form-group"><label>Service Name</label><input class="form-control" id="svcModalName" type="text"></div>
+      <div class="form-row">
+        <div class="form-group"><label>Price per kg (₱)</label><input class="form-control" id="svcModalPrice" type="number" min="0" step="0.5"></div>
+        <div class="form-group"><label>Duration (hrs)</label><input class="form-control" id="svcModalDuration" type="number" min="0" step="0.5"></div>
+      </div>
+      <div class="form-group"><label>Description</label><input class="form-control" id="svcModalDesc" type="text"></div>
+      <div class="form-group">
+        <label>Status</label>
+        <div class="toggle-wrap">
+          <label class="toggle"><input type="checkbox" id="svcModalActive" checked><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Active</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Inventory Deductions (comma separated, e.g. Detergent:0.05,Fabric Conditioner:0.03)</label>
+        <textarea class="form-control" id="svcModalDeductions" rows="2" placeholder="ItemName:qty per kg"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('serviceModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveService()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="staffModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Add/Edit Staff</h3>
+      <button class="modal-close" onclick="closeModal('staffModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <input type="hidden" id="staffModalId">
+      <div class="form-row">
+        <div class="form-group"><label>Full Name</label><input class="form-control" id="staffModalName" type="text"></div>
+        <div class="form-group"><label>Username</label><input class="form-control" id="staffModalUser" type="text"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Password</label><input class="form-control" id="staffModalPass" type="password"></div>
+        <div class="form-group">
+          <label>Role</label>
+          <select class="form-control" id="staffModalRole">
+            <option value="cashier">Cashier</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Daily Rate (₱)</label><input class="form-control" id="staffModalRate" type="number" min="0" step="50"></div>
+        <div class="form-group"><label>Contact</label><input class="form-control" id="staffModalContact" type="tel"></div>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <div class="toggle-wrap">
+          <label class="toggle"><input type="checkbox" id="staffModalActive" checked><span class="toggle-slider"></span></label>
+          <span class="toggle-label">Active</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('staffModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveStaff()">💾 Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast container -->
+<div id="toastContainer"></div>
+
+<!-- Success overlay -->
+<div id="successOverlay">
+  <div class="success-card">
+    <div class="success-check">✅</div>
+    <h2 style="font-size:1.4rem;font-weight:900;color:var(--gray-800);margin:8px 0">Order Created!</h2>
+    <p id="successOrderNum" style="color:var(--blue);font-weight:700;font-size:1.1rem;"></p>
+    <p style="color:var(--gray-500);font-size:0.87rem;margin-top:4px;" id="successCustName"></p>
+    <div style="display:flex;gap:10px;margin-top:20px;justify-content:center;flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="printReceipt(lastCreatedOrder)">🖨️ Print Receipt</button>
+      <button class="btn btn-secondary" onclick="closeSuccess()">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Print area -->
+<div id="printArea" style="display:none;"></div>
+
+<script>
+// ==================== STATE ====================
+let currentUser = null;
+let currentPage = 'dashboard';
+let expenseFilter = '';
+let lastCreatedOrder = null;
+let reportMode = 'daily';
+
+// ==================== DATA ====================
+function getData(key, def) {
+  try { const v = localStorage.getItem('mlb_' + key); return v ? JSON.parse(v) : def; } catch { return def; }
+}
+function setData(key, val) { localStorage.setItem('mlb_' + key, JSON.stringify(val)); }
+
+// Initialize defaults
+function initData() {
+  if (!getData('users', null)) {
+    setData('users', [
+      { id: 'u1', name: 'Administrator', username: 'admin', password: 'admin123', role: 'admin', active: true, dailyRate: 600, contact: '' },
+      { id: 'u2', name: 'Cashier', username: 'cashier', password: 'cash123', role: 'cashier', active: true, dailyRate: 400, contact: '' }
+    ]);
+  }
+  if (!getData('services', null)) {
+    const services = [
+      { id: 's1', name: 'Wash', pricePerKg: 25, duration: 2, active: true, desc: 'Machine wash only', deductions: 'Detergent:0.05' },
+      { id: 's2', name: 'Dry', pricePerKg: 20, duration: 1.5, active: true, desc: 'Machine dry only', deductions: '' },
+      { id: 's3', name: 'Fold', pricePerKg: 15, duration: 1, active: true, desc: 'Fold only', deductions: '' },
+      { id: 's4', name: 'Wash + Dry', pricePerKg: 40, duration: 3.5, active: true, desc: 'Wash and dry', deductions: 'Detergent:0.05' },
+      { id: 's5', name: 'Wash + Fold', pricePerKg: 35, duration: 3, active: true, desc: 'Wash and fold', deductions: 'Detergent:0.05,Plastic Packaging:1' },
+      { id: 's6', name: 'Dry + Fold', pricePerKg: 30, duration: 2.5, active: true, desc: 'Dry and fold', deductions: '' },
+      { id: 's7', name: 'Wash + Dry + Fold', pricePerKg: 50, duration: 4.5, active: true, desc: 'Full service', deductions: 'Detergent:0.05,Fabric Conditioner:0.03,Plastic Packaging:1' }
+    ];
+    setData('services', services);
+  }
+  if (!getData('inventory', null)) {
+    setData('inventory', [
+      { id: 'i1', name: 'Detergent', qty: 50, unit: 'kg', lowAlert: 10, cost: 60, supplier: 'Ace Hardware', icon: '🧴' },
+      { id: 'i2', name: 'Fabric Conditioner', qty: 20, unit: 'L', lowAlert: 5, cost: 80, supplier: 'SM Supermarket', icon: '🌸' },
+      { id: 'i3', name: 'Bleach', qty: 10, unit: 'L', lowAlert: 3, cost: 45, supplier: 'SM Supermarket', icon: '🪣' },
+      { id: 'i4', name: 'Plastic Packaging', qty: 200, unit: 'pcs', lowAlert: 30, cost: 2, supplier: 'Local Supplier', icon: '🛍️' },
+      { id: 'i5', name: 'Hangers', qty: 150, unit: 'pcs', lowAlert: 20, cost: 5, supplier: 'Local Supplier', icon: '🪝' },
+      { id: 'i6', name: 'Sticker Tags', qty: 500, unit: 'pcs', lowAlert: 50, cost: 0.5, supplier: 'Print Shop', icon: '🏷️' }
+    ]);
+  }
+  if (!getData('settings', null)) {
+    setData('settings', {
+      bizName: 'Mr. Labandero',
+      contact: '09XX-XXX-XXXX',
+      address: 'Taguig City, Metro Manila',
+      hours: '7:00 AM - 9:00 PM',
+      footer: 'Thank you for trusting Mr. Labandero! 🧺',
+      minCharge: 80,
+      rushFee: 30,
+      deliveryFee: 50,
+      specialFee: 150
+    });
+  }
+  if (!getData('orders', null)) setData('orders', []);
+  if (!getData('customers', null)) setData('customers', []);
+  if (!getData('expenses', null)) setData('expenses', []);
+  if (!getData('attendance', null)) setData('attendance', []);
+  // Demo data
+  if (getData('orders', []).length === 0) {
+    const demoOrders = [
+      { id: genId(), num: 'ORD-001', custName: 'Maria Santos', contact: '09171234567', address: 'Taguig City', service: 'Wash + Dry + Fold', weight: 5, price: 250, rush: false, delivery: false, status: 'Delivered', date: todayStr(-3), pickupDate: todayStr(-3), deliveryDate: todayStr(-2), notes: '', createdAt: Date.now()-3*86400000, specialItem: '' },
+      { id: genId(), num: 'ORD-002', custName: 'Juan Dela Cruz', contact: '09189876543', address: 'BGC, Taguig', service: 'Wash + Dry', weight: 3, price: 120, rush: false, delivery: true, status: 'Ready for Pickup', date: todayStr(-1), pickupDate: todayStr(0), deliveryDate: todayStr(1), notes: 'Handle with care', createdAt: Date.now()-86400000, specialItem: '' },
+      { id: genId(), num: 'ORD-003', custName: 'Ana Reyes', contact: '09201112222', address: 'Makati City', service: 'Wash + Dry + Fold', weight: 7, price: 350, rush: true, delivery: false, status: 'Washing', date: todayStr(0), pickupDate: todayStr(0), deliveryDate: todayStr(1), notes: '', createdAt: Date.now()-3600000, specialItem: 'Comforter' },
+      { id: genId(), num: 'ORD-004', custName: 'Pedro Bautista', contact: '09333445566', address: 'Pasig City', service: 'Fold', weight: 2, price: 80, rush: false, delivery: false, status: 'Pending', date: todayStr(0), pickupDate: todayStr(1), deliveryDate: '', notes: 'Separate whites', createdAt: Date.now()-1800000, specialItem: '' },
+    ];
+    setData('orders', demoOrders);
+    // Demo customers
+    setData('customers', [
+      { id: genId(), name: 'Maria Santos', contact: '09171234567', address: 'Taguig City', notes: 'Regular customer', orders: 8 },
+      { id: genId(), name: 'Juan Dela Cruz', contact: '09189876543', address: 'BGC, Taguig', notes: '', orders: 3 },
+      { id: genId(), name: 'Ana Reyes', contact: '09201112222', address: 'Makati City', notes: 'Prefers morning pickup', orders: 5 },
+    ]);
+    // Demo expenses
+    setData('expenses', [
+      { id: genId(), desc: 'Monthly Electricity', category: 'Utilities', amount: 3500, date: todayStr(-5), notes: '' },
+      { id: genId(), desc: 'Detergent Restock', category: 'Supplies', amount: 1200, date: todayStr(-3), notes: '20kg purchase' },
+      { id: genId(), desc: 'Staff Salary', category: 'Salaries', amount: 5000, date: todayStr(-1), notes: 'Weekly pay' },
+    ]);
+  }
+}
+
+function genId() { return Math.random().toString(36).substr(2,9); }
+function todayStr(offset = 0) {
+  const d = new Date(); d.setDate(d.getDate() + offset);
+  return d.toISOString().split('T')[0];
+}
+function fmtDate(str) { if (!str) return '—'; const d = new Date(str + 'T00:00:00'); return d.toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' }); }
+function fmtCur(n) { return '₱' + parseFloat(n || 0).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+function fmtNum(n) { return parseFloat(n || 0).toLocaleString(); }
+
+// ==================== AUTH ====================
+function doLogin() {
+  const u = document.getElementById('loginUser').value.trim();
+  const p = document.getElementById('loginPass').value.trim();
+  const users = getData('users', []);
+  const user = users.find(x => x.username === u && x.password === p && x.active);
+  if (!user) { showToast('Invalid credentials. Please try again.', 'error'); return; }
+  currentUser = user;
+  document.getElementById('authPage').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('navUserName').textContent = user.name;
+  document.getElementById('navAvatar').textContent = user.name[0];
+  // Show/hide admin-only elements
+  document.querySelectorAll('.admin-only').forEach(el => {
+    el.style.display = user.role === 'admin' ? '' : 'none';
+  });
+  initAppPage();
+  showPage('dashboard');
+}
+function doLogout() {
+  currentUser = null;
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('authPage').style.display = 'flex';
+  document.getElementById('loginUser').value = '';
+  document.getElementById('loginPass').value = '';
+}
+
+// ==================== NAVIGATION ====================
+function showPage(page) {
+  if (currentUser && currentUser.role !== 'admin' && ['inventory','expenses','reports','staff','attendance','payroll','services','settings'].includes(page)) {
+    showToast('Access denied. Admin only.', 'error'); return;
+  }
+  currentPage = page;
+  document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+  const pg = document.getElementById('page-' + page);
+  if (pg) pg.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll(`[data-page="${page}"]`).forEach(el => el.classList.add('active'));
+  document.querySelectorAll('.bottom-nav-item').forEach(el => el.classList.remove('active'));
+  const bn = document.getElementById('bnav-' + page);
+  if (bn) bn.classList.add('active');
+  closeSidebar();
+  // Render page content
+  switch(page) {
+    case 'dashboard': renderDashboard(); break;
+    case 'orders': renderOrders(); break;
+    case 'newOrder': initNewOrderForm(); break;
+    case 'customers': renderCustomers(); break;
+    case 'inventory': renderInventory(); break;
+    case 'expenses': renderExpenses(); break;
+    case 'reports': showReport(reportMode); break;
+    case 'staff': renderStaff(); break;
+    case 'attendance': renderAttendance(); break;
+    case 'payroll': renderPayroll(); break;
+    case 'services': renderServices(); break;
+    case 'settings': loadSettings(); break;
+  }
+}
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+}
+function initAppPage() {
+  const today = new Date();
+  const h = today.getHours();
+  let greet = h < 12 ? 'Good Morning! ☀️' : h < 17 ? 'Good Afternoon! 🌤️' : 'Good Evening! 🌙';
+  document.getElementById('dashGreeting').textContent = greet + ' ' + currentUser.name;
+  document.getElementById('dashDate').textContent = today.toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+// ==================== DASHBOARD ====================
+function renderDashboard() {
+  const orders = getData('orders', []);
+  const expenses = getData('expenses', []);
+  const inventory = getData('inventory', []);
+  const todayDate = todayStr(0);
+  const todayOrders = orders.filter(o => o.date === todayDate);
+  const todaySales = todayOrders.reduce((s, o) => s + (o.status !== 'Cancelled' ? parseFloat(o.price) : 0), 0);
+  const todayExpenses = expenses.filter(e => e.date === todayDate).reduce((s, e) => s + parseFloat(e.amount), 0);
+  const pending = orders.filter(o => o.status === 'Pending').length;
+  const inProcess = orders.filter(o => ['Washing','Drying','Folding'].includes(o.status)).length;
+  const ready = orders.filter(o => o.status === 'Ready for Pickup').length;
+  const delivered = orders.filter(o => o.status === 'Delivered').length;
+  document.getElementById('pendingBadge').textContent = pending;
+  const statsData = [
+    { icon: '💰', label: "Today's Sales", value: fmtCur(todaySales), sub: todayOrders.length + ' orders', color: 'rgba(34,197,94,0.1)' },
+    { icon: '⏳', label: 'Pending', value: pending, sub: 'awaiting', color: 'rgba(245,158,11,0.1)' },
+    { icon: '🔄', label: 'In Process', value: inProcess, sub: 'washing/drying/folding', color: 'rgba(14,165,233,0.1)' },
+    { icon: '✅', label: 'Ready', value: ready, sub: 'for pickup', color: 'rgba(20,184,166,0.1)' },
+    { icon: '📦', label: 'Delivered', value: delivered, sub: 'today total: ' + delivered, color: 'rgba(139,92,246,0.1)' },
+    { icon: '💸', label: 'Expenses', value: fmtCur(todayExpenses), sub: 'today', color: 'rgba(239,68,68,0.1)' },
+    { icon: '📈', label: 'Net Income', value: fmtCur(todaySales - todayExpenses), sub: 'today estimate', color: 'rgba(6,182,212,0.1)' },
+  ];
+  if (currentUser.role !== 'admin') statsData.splice(5, 2);
+  document.getElementById('dashStats').innerHTML = statsData.map((s, i) =>
+    `<div class="stat-card" style="--accent-color:${s.color};animation-delay:${i*0.07}s" onclick="${s.label.includes('Pending') ? "showPage('orders')" : ''}">
+      <div class="stat-icon">${s.icon}</div>
+      <div class="stat-label">${s.label}</div>
+      <div class="stat-value">${s.value}</div>
+      <div class="stat-sub">${s.sub}</div>
+    </div>`
+  ).join('');
+  // Weekly chart
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const today = new Date();
+  const dow = today.getDay();
+  const weekSales = days.map((_, i) => {
+    const d = new Date(today); d.setDate(d.getDate() - ((dow + 6 - i) % 7));
+    const ds = d.toISOString().split('T')[0];
+    return orders.filter(o => o.date === ds && o.status !== 'Cancelled').reduce((s,o) => s + parseFloat(o.price), 0);
+  });
+  const maxSale = Math.max(...weekSales, 1);
+  document.getElementById('weeklySalesChart').innerHTML = weekSales.map((v, i) =>
+    `<div class="bar-wrap"><div class="bar-val">${v > 0 ? fmtCur(v).replace('₱','') : ''}</div>
+    <div class="bar" style="height:${Math.max(4, (v/maxSale)*100)}px"></div>
+    <div class="bar-label">${days[i]}</div></div>`
+  ).join('');
+  // Recent orders
+  const recent = [...orders].sort((a,b) => b.createdAt - a.createdAt).slice(0, 5);
+  document.getElementById('recentOrdersList').innerHTML = recent.length ? recent.map(o =>
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--gray-50)">
+      <div>
+        <div style="font-weight:700;font-size:0.87rem">${o.custName}</div>
+        <div style="font-size:0.75rem;color:var(--gray-400)">${o.num} · ${o.service}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:800;color:var(--blue);font-size:0.9rem">${fmtCur(o.price)}</div>
+        <div>${statusBadge(o.status)}</div>
+      </div>
+    </div>`).join('') : '<div class="empty-state"><div class="empty-state-icon">📋</div><h3>No orders yet</h3></div>';
+  // Inventory alerts
+  const lowItems = inventory.filter(i => i.qty <= i.lowAlert);
+  document.getElementById('invAlerts').innerHTML = lowItems.length ?
+    lowItems.map(i => `<div class="alert alert-${i.qty === 0 ? 'danger' : 'warning'}">
+      ${i.icon} <strong>${i.name}</strong>: ${i.qty} ${i.unit} remaining ${i.qty === 0 ? '(OUT OF STOCK!)' : '(Low stock)'}
+    </div>`).join('') :
+    '<div class="alert alert-success">✅ All inventory levels are normal.</div>';
+}
+
+function statusBadge(status) {
+  const m = { 'Pending': 'pending', 'Washing': 'washing', 'Drying': 'drying', 'Folding': 'folding', 'Ready for Pickup': 'ready', 'Out for Delivery': 'delivery', 'Delivered': 'delivered', 'Cancelled': 'cancelled' };
+  return `<span class="badge badge-${m[status] || 'pending'}">${status}</span>`;
+}
+
+// ==================== ORDERS ====================
+function renderOrders() {
+  const orders = getData('orders', []);
+  const q = (document.getElementById('orderSearch')?.value || '').toLowerCase();
+  const sf = document.getElementById('orderStatusFilter')?.value || '';
+  let filtered = orders.filter(o => {
+    const matchQ = !q || o.custName.toLowerCase().includes(q) || o.num.toLowerCase().includes(q);
+    const matchS = !sf || o.status === sf;
+    if (currentUser.role !== 'admin') return matchQ && matchS;
+    return matchQ && matchS;
+  });
+  filtered.sort((a,b) => b.createdAt - a.createdAt);
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    document.getElementById('ordersList').innerHTML = filtered.length ? filtered.map(o => orderCard(o)).join('') : emptyState('📋', 'No orders found');
+  } else {
+    document.getElementById('ordersList').innerHTML = `<div class="card"><div class="table-wrap">
+      <table><thead><tr><th>Order #</th><th>Customer</th><th>Service</th><th>Weight</th><th>Amount</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>${filtered.length ? filtered.map(o => `<tr>
+        <td><span style="font-weight:700;color:var(--blue)">${o.num}</span></td>
+        <td><div style="font-weight:700">${o.custName}</div><div style="font-size:0.75rem;color:var(--gray-400)">${o.contact || ''}</div></td>
+        <td>${o.service}</td>
+        <td>${o.weight} kg</td>
+        <td style="font-weight:800;color:var(--blue)">${fmtCur(o.price)}</td>
+        <td>${statusBadge(o.status)}</td>
+        <td style="font-size:0.8rem;color:var(--gray-400)">${fmtDate(o.date)}</td>
+        <td><div style="display:flex;gap:6px">
+          <button class="btn btn-sm btn-outline" onclick="viewOrder('${o.id}')">👁️ View</button>
+          <button class="btn btn-sm btn-primary" onclick="printReceipt(getData('orders',[]).find(x=>x.id==='${o.id}'))">🖨️</button>
+        </div></td>
+      </tr>`).join('') : '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--gray-400)">No orders found</td></tr>'}</tbody>
+      </table></div></div>`;
+  }
+}
+function orderCard(o) {
+  return `<div class="order-card">
+    <div class="order-card-header">
+      <div><div class="order-num">${o.num}</div><div class="order-name">${o.custName}</div></div>
+      <div>${statusBadge(o.status)}</div>
+    </div>
+    <div class="order-service">${o.service} ${o.specialItem ? '· '+o.specialItem : ''}</div>
+    <div class="order-meta">
+      <span>⚖️ ${o.weight}kg</span>
+      <span>💰 ${fmtCur(o.price)}</span>
+      <span>📅 ${fmtDate(o.date)}</span>
+      ${o.rush ? '<span style="color:var(--danger)">⚡ Rush</span>' : ''}
+      ${o.delivery ? '<span style="color:var(--teal)">🚚 Delivery</span>' : ''}
+    </div>
+    <div class="order-actions">
+      <button class="btn btn-sm btn-primary" onclick="viewOrder('${o.id}')">👁️ View</button>
+      <button class="btn btn-sm btn-outline" onclick="printReceipt(getData('orders',[]).find(x=>x.id==='${o.id}'))">🖨️ Receipt</button>
+    </div>
+  </div>`;
+}
+function viewOrder(id) {
+  const orders = getData('orders', []);
+  const o = orders.find(x => x.id === id);
+  if (!o) return;
+  const statuses = ['Pending','Washing','Drying','Folding','Ready for Pickup','Out for Delivery','Delivered','Cancelled'];
+  const stepStatuses = ['Pending','Washing','Drying','Folding','Ready for Pickup','Out for Delivery','Delivered'];
+  const curIdx = stepStatuses.indexOf(o.status);
+  document.getElementById('orderModalTitle').textContent = o.num + ' — ' + o.custName;
+  document.getElementById('orderModalBody').innerHTML = `
+    <div style="margin-bottom:16px">
+      <div class="progress-steps">
+        ${stepStatuses.map((s, i) => `
+          <div class="progress-step">
+            <div class="step-circle ${i < curIdx ? 'done' : i === curIdx ? 'active' : 'pending'}">${i < curIdx ? '✓' : i+1}</div>
+            <div class="step-label">${s.replace(' for ','<br>').replace(' for ','\nfor ')}</div>
+          </div>
+          ${i < stepStatuses.length-1 ? `<div class="step-line ${i < curIdx ? 'done' : ''}"></div>` : ''}
+        `).join('')}
+      </div>
+    </div>
+    <div class="grid-2" style="gap:12px;margin-bottom:16px">
+      <div><div class="text-xs text-gray font-bold">Service</div><div class="font-bold">${o.service}</div></div>
+      <div><div class="text-xs text-gray font-bold">Weight</div><div class="font-bold">${o.weight} kg</div></div>
+      <div><div class="text-xs text-gray font-bold">Contact</div><div class="font-bold">${o.contact || '—'}</div></div>
+      <div><div class="text-xs text-gray font-bold">Amount</div><div class="font-bold text-blue">${fmtCur(o.price)}</div></div>
+      <div><div class="text-xs text-gray font-bold">Pickup</div><div class="font-bold">${fmtDate(o.pickupDate)}</div></div>
+      <div><div class="text-xs text-gray font-bold">Delivery</div><div class="font-bold">${fmtDate(o.deliveryDate) || 'N/A'}</div></div>
+    </div>
+    ${o.notes ? `<div class="alert alert-info">📝 ${o.notes}</div>` : ''}
+    ${o.status !== 'Cancelled' && o.status !== 'Delivered' ? `
+    <div class="form-group">
+      <label>Update Status</label>
+      <select class="form-control" id="updateStatusSel">
+        ${statuses.map(s => `<option value="${s}" ${o.status===s?'selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>` : ''}
+  `;
+  document.getElementById('orderModalFooter').innerHTML = `
+    <button class="btn btn-secondary" onclick="closeModal('orderModal')">Close</button>
+    <button class="btn btn-outline" onclick="printReceipt(getData('orders',[]).find(x=>x.id==='${o.id}'))">🖨️ Receipt</button>
+    ${o.status !== 'Cancelled' && o.status !== 'Delivered' ? `<button class="btn btn-primary" onclick="updateOrderStatus('${o.id}')">💾 Update</button>` : ''}
+    ${currentUser.role === 'admin' ? `<button class="btn btn-danger" onclick="deleteOrder('${o.id}')">🗑️</button>` : ''}
+  `;
+  openModal('orderModal');
+}
+function updateOrderStatus(id) {
+  const newStatus = document.getElementById('updateStatusSel')?.value;
+  if (!newStatus) return;
+  const orders = getData('orders', []);
+  const idx = orders.findIndex(o => o.id === id);
+  if (idx === -1) return;
+  orders[idx].status = newStatus;
+  setData('orders', orders);
+  closeModal('orderModal');
+  renderOrders();
+  renderDashboard();
+  showToast(`Order updated to "${newStatus}"`, 'success');
+}
+function deleteOrder(id) {
+  if (!confirm('Delete this order? This cannot be undone.')) return;
+  const orders = getData('orders', []).filter(o => o.id !== id);
+  setData('orders', orders);
+  closeModal('orderModal');
+  renderOrders();
+  showToast('Order deleted.', 'info');
+}
+
+// ==================== NEW ORDER ====================
+function initNewOrderForm() {
+  const orders = getData('orders', []);
+  const nextNum = 'ORD-' + String(orders.length + 1).padStart(3, '0');
+  document.getElementById('newOrderNum').value = nextNum;
+  document.getElementById('newOrderDate').value = todayStr(0);
+  document.getElementById('newPickupDate').value = todayStr(1);
+  document.getElementById('newDeliveryDate').value = '';
+  document.getElementById('newRush').checked = false;
+  document.getElementById('newDelivery').checked = false;
+  document.getElementById('newSpecialItem').value = '';
+  // Populate services
+  const services = getData('services', []).filter(s => s.active);
+  document.getElementById('newServiceType').innerHTML = '<option value="">Select service...</option>' + services.map(s =>
+    `<option value="${s.name}" data-price="${s.pricePerKg}">${s.name} (₱${s.pricePerKg}/kg)</option>`
+  ).join('');
+  // Populate customer datalist
+  const customers = getData('customers', []);
+  document.getElementById('custNameList').innerHTML = customers.map(c => `<option value="${c.name}">`).join('');
+  calcOrderPrice();
+  // Auto-fill customer data
+  document.getElementById('newCustName').addEventListener('input', function() {
+    const name = this.value;
+    const c = customers.find(x => x.name === name);
+    if (c) {
+      document.getElementById('newCustContact').value = c.contact || '';
+      document.getElementById('newCustAddress').value = c.address || '';
+    }
+  });
+}
+function calcOrderPrice() {
+  const settings = getData('settings', {});
+  const svcName = document.getElementById('newServiceType')?.value;
+  const weight = parseFloat(document.getElementById('newWeight')?.value) || 0;
+  const rush = document.getElementById('newRush')?.checked;
+  const delivery = document.getElementById('newDelivery')?.checked;
+  const specialItem = document.getElementById('newSpecialItem')?.value;
+  const services = getData('services', []);
+  const svc = services.find(s => s.name === svcName);
+  const minCharge = parseFloat(settings.minCharge) || 80;
+  const rushFee = parseFloat(settings.rushFee) || 30;
+  const delivFee = parseFloat(settings.deliveryFee) || 50;
+  const specialFee = parseFloat(settings.specialFee) || 150;
+  let base = 0, lines = [];
+  if (svc && weight > 0) {
+    base = svc.pricePerKg * weight;
+    base = Math.max(base, minCharge);
+    lines.push(`<div>${svc.name} (${weight}kg × ₱${svc.pricePerKg}): <strong>${fmtCur(base)}</strong></div>`);
+  } else if (svc) {
+    lines.push(`<div>${svc.name}: minimum ₱${minCharge}</div>`);
+    base = minCharge;
+  }
+  let extras = 0;
+  if (rush) { extras += rushFee; lines.push(`<div>⚡ Rush fee: <strong>+${fmtCur(rushFee)}</strong></div>`); }
+  if (delivery) { extras += delivFee; lines.push(`<div>🚚 Delivery fee: <strong>+${fmtCur(delivFee)}</strong></div>`); }
+  if (specialItem) { extras += specialFee; lines.push(`<div>🛍️ Special item (${specialItem}): <strong>+${fmtCur(specialFee)}</strong></div>`); }
+  const total = base + extras;
+  document.getElementById('priceSummary').innerHTML = lines.join('') || '<div style="color:var(--gray-400)">Select service and enter weight to see pricing...</div>';
+  document.getElementById('orderTotal').textContent = fmtCur(total);
+}
+function submitOrder() {
+  const custName = document.getElementById('newCustName').value.trim();
+  const service = document.getElementById('newServiceType').value;
+  const weight = parseFloat(document.getElementById('newWeight').value) || 0;
+  if (!custName) { showToast('Please enter customer name.', 'error'); return; }
+  if (!service) { showToast('Please select a service.', 'error'); return; }
+  if (weight <= 0) { showToast('Please enter valid weight.', 'error'); return; }
+  const orders = getData('orders', []);
+  const settings = getData('settings', {});
+  const services = getData('services', []);
+  const svc = services.find(s => s.name === service);
+  const rush = document.getElementById('newRush').checked;
+  const delivery = document.getElementById('newDelivery').checked;
+  const specialItem = document.getElementById('newSpecialItem').value;
+  const minCharge = parseFloat(settings.minCharge) || 80;
+  let base = svc ? Math.max(svc.pricePerKg * weight, minCharge) : minCharge;
+  if (rush) base += parseFloat(settings.rushFee) || 30;
+  if (delivery) base += parseFloat(settings.deliveryFee) || 50;
+  if (specialItem) base += parseFloat(settings.specialFee) || 150;
+  const order = {
+    id: genId(),
+    num: document.getElementById('newOrderNum').value,
+    custName, contact: document.getElementById('newCustContact').value,
+    address: document.getElementById('newCustAddress').value,
+    service, weight, price: base, rush, delivery, specialItem,
+    status: 'Pending',
+    date: document.getElementById('newOrderDate').value,
+    pickupDate: document.getElementById('newPickupDate').value,
+    deliveryDate: document.getElementById('newDeliveryDate').value,
+    notes: document.getElementById('newNotes').value,
+    createdAt: Date.now()
+  };
+  orders.push(order);
+  setData('orders', orders);
+  // Deduct inventory
+  if (svc && svc.deductions) {
+    const inv = getData('inventory', []);
+    svc.deductions.split(',').forEach(d => {
+      const [name, qtyPer] = d.trim().split(':');
+      const idx = inv.findIndex(i => i.name.toLowerCase() === name.trim().toLowerCase());
+      if (idx !== -1) inv[idx].qty = Math.max(0, inv[idx].qty - (parseFloat(qtyPer) * weight));
+    });
+    setData('inventory', inv);
+  }
+  // Save/update customer
+  const customers = getData('customers', []);
+  const cIdx = customers.findIndex(c => c.name.toLowerCase() === custName.toLowerCase());
+  if (cIdx !== -1) { customers[cIdx].orders = (customers[cIdx].orders || 0) + 1; }
+  else { customers.push({ id: genId(), name: custName, contact: order.contact, address: order.address, notes: '', orders: 1 }); }
+  setData('customers', customers);
+  lastCreatedOrder = order;
+  document.getElementById('successOrderNum').textContent = order.num;
+  document.getElementById('successCustName').textContent = custName + ' · ' + fmtCur(order.price);
+  document.getElementById('successOverlay').classList.add('show');
+  clearNewOrderForm();
+  showPage('orders');
+}
+function clearNewOrderForm() {
+  ['newCustName','newCustContact','newCustAddress','newWeight','newNotes','newDeliveryDate'].forEach(id => {
+    const el = document.getElementById(id); if (el) el.value = '';
+  });
+  document.getElementById('newServiceType').value = '';
+  document.getElementById('newRush').checked = false;
+  document.getElementById('newDelivery').checked = false;
+  document.getElementById('newSpecialItem').value = '';
+  calcOrderPrice();
+}
+function closeSuccess() { document.getElementById('successOverlay').classList.remove('show'); }
+
+// ==================== RECEIPT PRINTING ====================
+function printReceipt(o) {
+  if (!o) return;
+  const settings = getData('settings', {});
+  const html = `<div class="receipt">
+    <div class="receipt-header">
+      <div style="font-size:24px">🧺</div>
+      <div style="font-weight:bold;font-size:16px">${settings.bizName || 'Mr. Labandero'}</div>
+      <div>${settings.address || ''}</div>
+      <div>${settings.contact || ''}</div>
+      <div>${settings.hours || ''}</div>
+    </div>
+    <div class="receipt-divider"></div>
+    <div class="receipt-row"><span><b>ORDER #:</b></span><span><b>${o.num}</b></span></div>
+    <div class="receipt-row"><span>Date:</span><span>${fmtDate(o.date)}</span></div>
+    <div class="receipt-divider"></div>
+    <div class="receipt-row"><span>Customer:</span><span>${o.custName}</span></div>
+    <div class="receipt-row"><span>Contact:</span><span>${o.contact || '—'}</span></div>
+    <div class="receipt-divider"></div>
+    <div class="receipt-row"><span>Service:</span><span>${o.service}</span></div>
+    <div class="receipt-row"><span>Weight:</span><span>${o.weight} kg</span></div>
+    ${o.specialItem ? `<div class="receipt-row"><span>Special:</span><span>${o.specialItem}</span></div>` : ''}
+    ${o.rush ? `<div class="receipt-row"><span>Rush Order:</span><span>Yes</span></div>` : ''}
+    ${o.delivery ? `<div class="receipt-row"><span>Delivery:</span><span>Yes</span></div>` : ''}
+    <div class="receipt-divider"></div>
+    <div class="receipt-row"><span>Pickup Date:</span><span>${fmtDate(o.pickupDate)}</span></div>
+    ${o.deliveryDate ? `<div class="receipt-row"><span>Delivery Date:</span><span>${fmtDate(o.deliveryDate)}</span></div>` : ''}
+    <div class="receipt-divider"></div>
+    <div class="receipt-row receipt-total"><span>TOTAL:</span><span>${fmtCur(o.price)}</span></div>
+    <div class="receipt-divider"></div>
+    <div style="text-align:center;margin-top:12px;font-size:11px">${settings.footer || 'Thank you for your business!'}</div>
+    <div style="text-align:center;margin-top:8px;font-size:10px">Status: ${o.status}</div>
+    <div style="text-align:center;margin-top:4px;font-size:10px">-- CLAIM STUB --</div>
+    <div style="text-align:center;font-weight:bold">${o.num}</div>
+    <div style="text-align:center">${o.custName}</div>
+  </div>`;
+  document.getElementById('printArea').innerHTML = html;
+  window.print();
+}
+
+// ==================== CUSTOMERS ====================
+function renderCustomers() {
+  const customers = getData('customers', []);
+  const q = (document.getElementById('custSearch')?.value || '').toLowerCase();
+  const filtered = customers.filter(c => !q || c.name.toLowerCase().includes(q) || (c.contact||'').includes(q));
+  document.getElementById('customersList').innerHTML = filtered.length ? `<div class="card"><div class="table-wrap">
+    <table><thead><tr><th>Name</th><th>Contact</th><th>Address</th><th>Orders</th><th>Actions</th></tr></thead>
+    <tbody>${filtered.map(c => `<tr>
+      <td><div style="font-weight:700">${c.name}</div></td>
+      <td>${c.contact || '—'}</td>
+      <td style="font-size:0.82rem;color:var(--gray-500)">${c.address || '—'}</td>
+      <td><span class="badge badge-active">${c.orders || 0} orders</span></td>
+      <td><div style="display:flex;gap:6px">
+        <button class="btn btn-sm btn-outline" onclick="editCustomer('${c.id}')">✏️ Edit</button>
+        <button class="btn btn-sm btn-primary" onclick="repeatOrder('${c.id}')">➕ Order</button>
+        ${currentUser.role === 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteCustomer('${c.id}')">🗑️</button>` : ''}
+      </div></td>
+    </tr>`).join('')}</tbody></table></div></div>` :
+    `<div class="card">${emptyState('👥', 'No customers yet')}</div>`;
+}
+function openCustomerModal(c = null) {
+  document.getElementById('custModalId').value = c?.id || '';
+  document.getElementById('custModalName').value = c?.name || '';
+  document.getElementById('custModalContact').value = c?.contact || '';
+  document.getElementById('custModalAddress').value = c?.address || '';
+  document.getElementById('custModalNotes').value = c?.notes || '';
+  openModal('customerModal');
+}
+function editCustomer(id) {
+  const c = getData('customers', []).find(x => x.id === id);
+  if (c) openCustomerModal(c);
+}
+function saveCustomer() {
+  const id = document.getElementById('custModalId').value;
+  const name = document.getElementById('custModalName').value.trim();
+  if (!name) { showToast('Name is required.', 'error'); return; }
+  const customers = getData('customers', []);
+  const item = { id: id || genId(), name, contact: document.getElementById('custModalContact').value, address: document.getElementById('custModalAddress').value, notes: document.getElementById('custModalNotes').value, orders: 0 };
+  if (id) { const idx = customers.findIndex(c => c.id === id); if (idx !== -1) { item.orders = customers[idx].orders; customers[idx] = item; } }
+  else customers.push(item);
+  setData('customers', customers);
+  closeModal('customerModal');
+  renderCustomers();
+  showToast('Customer saved!', 'success');
+}
+function deleteCustomer(id) {
+  if (!confirm('Delete this customer?')) return;
+  setData('customers', getData('customers', []).filter(c => c.id !== id));
+  renderCustomers();
+  showToast('Customer deleted.', 'info');
+}
+function repeatOrder(id) {
+  const c = getData('customers', []).find(x => x.id === id);
+  if (!c) return;
+  showPage('newOrder');
+  setTimeout(() => {
+    document.getElementById('newCustName').value = c.name;
+    document.getElementById('newCustContact').value = c.contact || '';
+    document.getElementById('newCustAddress').value = c.address || '';
+  }, 100);
+}
+
+// ==================== INVENTORY ====================
+function renderInventory() {
+  const inventory = getData('inventory', []);
+  document.getElementById('inventoryList').innerHTML = `<div class="card">
+    ${inventory.length ? inventory.map(i => {
+      const pct = Math.min(100, Math.max(0, (i.qty / Math.max(i.lowAlert * 3, 1)) * 100));
+      const isLow = i.qty <= i.lowAlert;
+      const isCrit = i.qty === 0;
+      return `<div class="inv-item">
+        <div class="inv-icon" style="background:${isCrit ? '#fee2e2' : isLow ? '#fef9c3' : '#d1fae5'}">${i.icon || '📦'}</div>
+        <div class="inv-info">
+          <div class="inv-name">${i.name}</div>
+          <div class="inv-detail">Alert at ${i.lowAlert} ${i.unit} · ₱${i.cost}/${i.unit} · ${i.supplier || 'N/A'}</div>
+          <div style="height:4px;background:var(--gray-100);border-radius:99px;margin-top:6px">
+            <div style="height:4px;width:${pct}%;background:${isCrit ? '#ef4444' : isLow ? '#f59e0b' : '#22c55e'};border-radius:99px;transition:width 0.6s"></div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div class="inv-stock" style="color:${isCrit ? 'var(--danger)' : isLow ? 'var(--warning)' : 'var(--success)'}">${i.qty}</div>
+          <div style="font-size:0.72rem;color:var(--gray-400)">${i.unit}</div>
+          <div style="display:flex;gap:4px;margin-top:6px">
+            <button class="btn btn-sm btn-outline" onclick="openInventoryModal('${i.id}')">✏️</button>
+            <button class="btn btn-sm btn-primary" onclick="addStock('${i.id}')">+</button>
+            ${currentUser.role === 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteInv('${i.id}')">🗑️</button>` : ''}
+          </div>
+        </div>
+      </div>`;
+    }).join('') : emptyState('📦', 'No inventory items')}
+  </div>`;
+}
+function openInventoryModal(id = null) {
+  const item = id ? getData('inventory', []).find(i => i.id === id) : null;
+  document.getElementById('invModalId').value = item?.id || '';
+  document.getElementById('invModalName').value = item?.name || '';
+  document.getElementById('invModalQty').value = item?.qty || '';
+  document.getElementById('invModalUnit').value = item?.unit || '';
+  document.getElementById('invModalLow').value = item?.lowAlert || '';
+  document.getElementById('invModalCost').value = item?.cost || '';
+  document.getElementById('invModalSupplier').value = item?.supplier || '';
+  document.getElementById('invModalIcon').value = item?.icon || '📦';
+  openModal('inventoryModal');
+}
+function saveInventoryItem() {
+  const id = document.getElementById('invModalId').value;
+  const name = document.getElementById('invModalName').value.trim();
+  if (!name) { showToast('Name is required.', 'error'); return; }
+  const inv = getData('inventory', []);
+  const item = { id: id || genId(), name, qty: parseFloat(document.getElementById('invModalQty').value) || 0, unit: document.getElementById('invModalUnit').value, lowAlert: parseFloat(document.getElementById('invModalLow').value) || 0, cost: parseFloat(document.getElementById('invModalCost').value) || 0, supplier: document.getElementById('invModalSupplier').value, icon: document.getElementById('invModalIcon').value };
+  if (id) { const idx = inv.findIndex(i => i.id === id); if (idx !== -1) inv[idx] = item; }
+  else inv.push(item);
+  setData('inventory', inv);
+  closeModal('inventoryModal');
+  renderInventory();
+  showToast('Inventory saved!', 'success');
+}
+function addStock(id) {
+  const qty = prompt('Add stock quantity:');
+  if (!qty || isNaN(qty)) return;
+  const inv = getData('inventory', []);
+  const idx = inv.findIndex(i => i.id === id);
+  if (idx !== -1) { inv[idx].qty += parseFloat(qty); setData('inventory', inv); renderInventory(); showToast('Stock updated!', 'success'); }
+}
+function deleteInv(id) {
+  if (!confirm('Delete this item?')) return;
+  setData('inventory', getData('inventory', []).filter(i => i.id !== id));
+  renderInventory();
+}
+
+// ==================== EXPENSES ====================
+function filterExpenses(cat) {
+  expenseFilter = cat;
+  document.querySelectorAll('#expTabs .tab-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  renderExpenses();
+}
+function renderExpenses() {
+  let expenses = getData('expenses', []);
+  if (expenseFilter) expenses = expenses.filter(e => e.category === expenseFilter);
+  expenses.sort((a,b) => new Date(b.date) - new Date(a.date));
+  const total = expenses.reduce((s,e) => s + parseFloat(e.amount), 0);
+  document.getElementById('expensesList').innerHTML = `
+    <div class="card mb-4" style="background:linear-gradient(135deg,var(--blue),var(--aqua));color:white">
+      <div style="font-size:0.8rem;opacity:0.8;font-weight:700;text-transform:uppercase">Total ${expenseFilter || 'All'} Expenses</div>
+      <div style="font-size:2rem;font-weight:900;margin-top:4px">${fmtCur(total)}</div>
+    </div>
+    <div class="card"><div class="table-wrap">
+      <table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th>Actions</th></tr></thead>
+      <tbody>${expenses.length ? expenses.map(e => `<tr>
+        <td style="font-size:0.82rem;color:var(--gray-400)">${fmtDate(e.date)}</td>
+        <td><div style="font-weight:700">${e.desc}</div>${e.notes ? `<div style="font-size:0.75rem;color:var(--gray-400)">${e.notes}</div>` : ''}</td>
+        <td><span class="badge badge-pending">${e.category}</span></td>
+        <td style="font-weight:800;color:var(--danger)">${fmtCur(e.amount)}</td>
+        <td>${currentUser.role === 'admin' ? `<button class="btn btn-sm btn-danger" onclick="deleteExpense('${e.id}')">🗑️</button>` : ''}</td>
+      </tr>`).join('') : '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--gray-400)">No expenses found</td></tr>'}</tbody>
+      </table></div></div>`;
+}
+function openExpenseModal() {
+  document.getElementById('expModalDesc').value = '';
+  document.getElementById('expModalAmt').value = '';
+  document.getElementById('expModalDate').value = todayStr(0);
+  document.getElementById('expModalNotes').value = '';
+  openModal('expenseModal');
+}
+function saveExpense() {
+  const desc = document.getElementById('expModalDesc').value.trim();
+  const amt = parseFloat(document.getElementById('expModalAmt').value);
+  if (!desc || !amt) { showToast('Fill in all required fields.', 'error'); return; }
+  const expenses = getData('expenses', []);
+  expenses.push({ id: genId(), desc, category: document.getElementById('expModalCat').value, amount: amt, date: document.getElementById('expModalDate').value, notes: document.getElementById('expModalNotes').value });
+  setData('expenses', expenses);
+  closeModal('expenseModal');
+  renderExpenses();
+  showToast('Expense recorded!', 'success');
+}
+function deleteExpense(id) {
+  if (!confirm('Delete this expense?')) return;
+  setData('expenses', getData('expenses', []).filter(e => e.id !== id));
+  renderExpenses();
+}
+
+// ==================== REPORTS ====================
+function showReport(mode) {
+  reportMode = mode;
+  const orders = getData('orders', []);
+  const expenses = getData('expenses', []);
+  const services = getData('services', []);
+  const today = new Date();
+  let filteredOrders = [], filteredExpenses = [], title = '';
+  if (mode === 'daily') {
+    const d = todayStr(0);
+    filteredOrders = orders.filter(o => o.date === d && o.status !== 'Cancelled');
+    filteredExpenses = expenses.filter(e => e.date === d);
+    title = 'Daily Report — ' + fmtDate(d);
+  } else if (mode === 'weekly') {
+    const weekAgo = new Date(today); weekAgo.setDate(weekAgo.getDate() - 7);
+    filteredOrders = orders.filter(o => new Date(o.date) >= weekAgo && o.status !== 'Cancelled');
+    filteredExpenses = expenses.filter(e => new Date(e.date) >= weekAgo);
+    title = 'Weekly Report (Last 7 Days)';
+  } else if (mode === 'monthly') {
+    const m = today.getMonth(), y = today.getFullYear();
+    filteredOrders = orders.filter(o => { const d = new Date(o.date); return d.getMonth() === m && d.getFullYear() === y && o.status !== 'Cancelled'; });
+    filteredExpenses = expenses.filter(e => { const d = new Date(e.date); return d.getMonth() === m && d.getFullYear() === y; });
+    title = 'Monthly Report — ' + today.toLocaleDateString('en-PH', { month: 'long', year: 'numeric' });
+  } else if (mode === 'services') {
+    const svcCount = {};
+    orders.filter(o => o.status !== 'Cancelled').forEach(o => {
+      svcCount[o.service] = (svcCount[o.service] || { count: 0, revenue: 0 });
+      svcCount[o.service].count++;
+      svcCount[o.service].revenue += parseFloat(o.price);
+    });
+    document.getElementById('reportContent').innerHTML = `
+      <div class="card"><div style="font-weight:800;font-size:1rem;margin-bottom:16px">🏆 Best-Selling Services (All Time)</div>
+      <div class="table-wrap"><table><thead><tr><th>Service</th><th>Orders</th><th>Revenue</th></tr></thead>
+      <tbody>${Object.entries(svcCount).sort((a,b) => b[1].count - a[1].count).map(([svc, data]) =>
+        `<tr><td style="font-weight:700">${svc}</td><td><span class="badge badge-active">${data.count}</span></td><td style="font-weight:800;color:var(--blue)">${fmtCur(data.revenue)}</td></tr>`
+      ).join('')}</tbody></table></div></div>`;
+    return;
+  } else if (mode === 'inventory') {
+    const inv = getData('inventory', []);
+    document.getElementById('reportContent').innerHTML = `
+      <div class="card"><div style="font-weight:800;font-size:1rem;margin-bottom:16px">📦 Inventory Summary</div>
+      <div class="table-wrap"><table><thead><tr><th>Item</th><th>Qty</th><th>Unit</th><th>Cost/Unit</th><th>Total Value</th><th>Status</th></tr></thead>
+      <tbody>${inv.map(i => `<tr>
+        <td><span style="margin-right:6px">${i.icon}</span><strong>${i.name}</strong></td>
+        <td>${i.qty}</td><td>${i.unit}</td>
+        <td>${fmtCur(i.cost)}</td>
+        <td style="font-weight:700">${fmtCur(i.qty * i.cost)}</td>
+        <td>${i.qty === 0 ? '<span class="badge badge-critical">Out of Stock</span>' : i.qty <= i.lowAlert ? '<span class="badge badge-low">Low</span>' : '<span class="badge badge-active">OK</span>'}</td>
+      </tr>`).join('')}</tbody></table></div></div>`;
+    return;
+  }
+  const totalSales = filteredOrders.reduce((s,o) => s + parseFloat(o.price), 0);
+  const totalExp = filteredExpenses.reduce((s,e) => s + parseFloat(e.amount), 0);
+  document.getElementById('reportContent').innerHTML = `
+    <div class="stats-grid" style="margin-bottom:20px">
+      <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-label">Total Sales</div><div class="stat-value">${fmtCur(totalSales)}</div><div class="stat-sub">${filteredOrders.length} orders</div></div>
+      <div class="stat-card"><div class="stat-icon">💸</div><div class="stat-label">Expenses</div><div class="stat-value">${fmtCur(totalExp)}</div></div>
+      <div class="stat-card"><div class="stat-icon">📈</div><div class="stat-label">Net Income</div><div class="stat-value" style="color:${totalSales-totalExp >= 0 ? 'var(--success)' : 'var(--danger)'}">${fmtCur(totalSales - totalExp)}</div></div>
+    </div>
+    <div class="card"><div style="font-weight:800;margin-bottom:12px">📋 Order Breakdown</div>
+    <div class="table-wrap"><table><thead><tr><th>Order #</th><th>Customer</th><th>Service</th><th>Amount</th><th>Status</th></tr></thead>
+    <tbody>${filteredOrders.map(o => `<tr><td style="color:var(--blue);font-weight:700">${o.num}</td><td>${o.custName}</td><td>${o.service}</td><td style="font-weight:800">${fmtCur(o.price)}</td><td>${statusBadge(o.status)}</td></tr>`).join('') || '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--gray-400)">No orders for this period</td></tr>'}</tbody>
+    </table></div></div>`;
+}
+
+// ==================== STAFF ====================
+function renderStaff() {
+  const users = getData('users', []);
+  document.getElementById('staffList').innerHTML = `<div class="card"><div class="table-wrap">
+    <table><thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Daily Rate</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>${users.map(u => `<tr>
+      <td><div style="font-weight:700">${u.name}</div></td>
+      <td style="font-family:monospace;color:var(--blue)">${u.username}</td>
+      <td><span class="badge ${u.role === 'admin' ? 'badge-washing' : 'badge-folding'}">${u.role}</span></td>
+      <td>${fmtCur(u.dailyRate || 0)}</td>
+      <td>${u.active ? '<span class="badge badge-active">Active</span>' : '<span class="badge badge-inactive">Inactive</span>'}</td>
+      <td><div style="display:flex;gap:6px">
+        <button class="btn btn-sm btn-outline" onclick="editStaff('${u.id}')">✏️ Edit</button>
+        <button class="btn btn-sm ${u.active ? 'btn-warning' : 'btn-success'}" onclick="toggleStaff('${u.id}')">${u.active ? '🔒 Disable' : '🔓 Enable'}</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table></div></div>`;
+}
+function openStaffModal(u = null) {
+  document.getElementById('staffModalId').value = u?.id || '';
+  document.getElementById('staffModalName').value = u?.name || '';
+  document.getElementById('staffModalUser').value = u?.username || '';
+  document.getElementById('staffModalPass').value = '';
+  document.getElementById('staffModalRole').value = u?.role || 'cashier';
+  document.getElementById('staffModalRate').value = u?.dailyRate || '';
+  document.getElementById('staffModalContact').value = u?.contact || '';
+  document.getElementById('staffModalActive').checked = u?.active !== false;
+  openModal('staffModal');
+}
+function editStaff(id) { openStaffModal(getData('users', []).find(u => u.id === id)); }
+function saveStaff() {
+  const id = document.getElementById('staffModalId').value;
+  const name = document.getElementById('staffModalName').value.trim();
+  const username = document.getElementById('staffModalUser').value.trim();
+  if (!name || !username) { showToast('Name and username are required.', 'error'); return; }
+  const users = getData('users', []);
+  const pass = document.getElementById('staffModalPass').value;
+  const existing = id ? users.find(u => u.id === id) : null;
+  const user = { id: id || genId(), name, username, password: pass || existing?.password || 'pass123', role: document.getElementById('staffModalRole').value, dailyRate: parseFloat(document.getElementById('staffModalRate').value) || 0, contact: document.getElementById('staffModalContact').value, active: document.getElementById('staffModalActive').checked };
+  if (id) { const idx = users.findIndex(u => u.id === id); if (idx !== -1) users[idx] = user; }
+  else users.push(user);
+  setData('users', users);
+  closeModal('staffModal');
+  renderStaff();
+  showToast('Staff saved!', 'success');
+}
+function toggleStaff(id) {
+  const users = getData('users', []);
+  const idx = users.findIndex(u => u.id === id);
+  if (idx !== -1) { users[idx].active = !users[idx].active; setData('users', users); renderStaff(); showToast('Staff status updated.', 'info'); }
+}
+
+// ==================== ATTENDANCE ====================
+function renderAttendance() {
+  const users = getData('users', []).filter(u => u.active);
+  document.getElementById('attendStaff').innerHTML = users.map(u => `<option value="${u.id}">${u.name}</option>`).join('');
+  const logs = getData('attendance', []).sort((a,b) => b.timestamp - a.timestamp).slice(0, 50);
+  document.getElementById('attendanceLogs').innerHTML = logs.length ? `<div class="table-wrap"><table><thead><tr><th>Staff</th><th>Type</th><th>Time</th><th>Date</th></tr></thead>
+    <tbody>${logs.map(l => {
+      const user = getData('users', []).find(u => u.id === l.userId);
+      return `<tr>
+        <td style="font-weight:700">${user?.name || 'Unknown'}</td>
+        <td><span class="badge ${l.type === 'in' ? 'badge-active' : 'badge-cancelled'}">${l.type === 'in' ? '🟢 TIME IN' : '🔴 TIME OUT'}</span></td>
+        <td>${new Date(l.timestamp).toLocaleTimeString('en-PH')}</td>
+        <td style="color:var(--gray-400);font-size:0.82rem">${new Date(l.timestamp).toLocaleDateString('en-PH')}</td>
+      </tr>`;
+    }).join('')}</tbody></table></div>` : emptyState('🕐', 'No attendance logs yet');
+}
+function clockAction(type) {
+  const userId = document.getElementById('attendStaff').value;
+  const logs = getData('attendance', []);
+  logs.push({ id: genId(), userId, type, timestamp: Date.now() });
+  setData('attendance', logs);
+  renderAttendance();
+  showToast(`Time ${type} recorded!`, 'success');
+}
+
+// ==================== PAYROLL ====================
+function renderPayroll() {
+  const users = getData('users', []).filter(u => u.active);
+  const attendance = getData('attendance', []);
+  const today = new Date();
+  const startOfWeek = new Date(today); startOfWeek.setDate(today.getDate() - today.getDay());
+  const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const html = users.map(u => {
+    const userLogs = attendance.filter(a => a.userId === u.id);
+    // Count unique in days this month
+    const inDays = new Set(userLogs.filter(a => a.type === 'in' && new Date(a.timestamp) >= startOfMonth).map(a => new Date(a.timestamp).toDateString())).size;
+    const weeklySal = u.dailyRate * Math.min(inDays, 6);
+    const monthlySal = u.dailyRate * inDays;
+    return `<div class="payroll-row">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-weight:800;font-size:1rem">${u.name}</div>
+          <div style="font-size:0.8rem;color:var(--gray-400)">${u.role} · ₱${u.dailyRate}/day</div>
+        </div>
+        <span class="badge badge-${u.role === 'admin' ? 'washing' : 'folding'}">${u.role}</span>
+      </div>
+      <div class="grid-3 mt-3" style="gap:10px">
+        <div style="background:var(--gray-50);padding:10px;border-radius:var(--radius-sm);text-align:center">
+          <div style="font-size:0.7rem;color:var(--gray-400);font-weight:700;text-transform:uppercase">Days Worked</div>
+          <div style="font-size:1.4rem;font-weight:900;color:var(--blue)">${inDays}</div>
+        </div>
+        <div style="background:var(--gray-50);padding:10px;border-radius:var(--radius-sm);text-align:center">
+          <div style="font-size:0.7rem;color:var(--gray-400);font-weight:700;text-transform:uppercase">Weekly Pay</div>
+          <div style="font-size:1.1rem;font-weight:900;color:var(--success)">${fmtCur(weeklySal)}</div>
+        </div>
+        <div style="background:var(--gray-50);padding:10px;border-radius:var(--radius-sm);text-align:center">
+          <div style="font-size:0.7rem;color:var(--gray-400);font-weight:700;text-transform:uppercase">Monthly Pay</div>
+          <div style="font-size:1.1rem;font-weight:900;color:var(--teal)">${fmtCur(monthlySal)}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('payrollContent').innerHTML = html || emptyState('💰', 'No staff found');
+}
+
+// ==================== SERVICES ====================
+function renderServices() {
+  const services = getData('services', []);
+  document.getElementById('servicesList').innerHTML = `<div class="card"><div class="table-wrap">
+    <table><thead><tr><th>Service</th><th>Price/kg</th><th>Duration</th><th>Status</th><th>Deductions</th><th>Actions</th></tr></thead>
+    <tbody>${services.map(s => `<tr>
+      <td><div style="font-weight:700">${s.name}</div><div style="font-size:0.75rem;color:var(--gray-400)">${s.desc||''}</div></td>
+      <td style="font-weight:800;color:var(--blue)">₱${s.pricePerKg}/kg</td>
+      <td style="color:var(--gray-500)">${s.duration || 0}h</td>
+      <td><label class="toggle" title="${s.active ? 'Active' : 'Inactive'}">
+        <input type="checkbox" ${s.active ? 'checked' : ''} onchange="toggleService('${s.id}')">
+        <span class="toggle-slider"></span></label></td>
+      <td style="font-size:0.75rem;color:var(--gray-400)">${s.deductions || '—'}</td>
+      <td><div style="display:flex;gap:6px">
+        <button class="btn btn-sm btn-outline" onclick="editService('${s.id}')">✏️</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteService('${s.id}')">🗑️</button>
+      </div></td>
+    </tr>`).join('')}</tbody></table></div></div>`;
+}
+function openServiceModal(s = null) {
+  document.getElementById('svcModalId').value = s?.id || '';
+  document.getElementById('svcModalName').value = s?.name || '';
+  document.getElementById('svcModalPrice').value = s?.pricePerKg || '';
+  document.getElementById('svcModalDuration').value = s?.duration || '';
+  document.getElementById('svcModalDesc').value = s?.desc || '';
+  document.getElementById('svcModalActive').checked = s?.active !== false;
+  document.getElementById('svcModalDeductions').value = s?.deductions || '';
+  openModal('serviceModal');
+}
+function editService(id) { openServiceModal(getData('services', []).find(s => s.id === id)); }
+function saveService() {
+  const id = document.getElementById('svcModalId').value;
+  const name = document.getElementById('svcModalName').value.trim();
+  if (!name) { showToast('Service name required.', 'error'); return; }
+  const services = getData('services', []);
+  const item = { id: id || genId(), name, pricePerKg: parseFloat(document.getElementById('svcModalPrice').value) || 0, duration: parseFloat(document.getElementById('svcModalDuration').value) || 0, desc: document.getElementById('svcModalDesc').value, active: document.getElementById('svcModalActive').checked, deductions: document.getElementById('svcModalDeductions').value };
+  if (id) { const idx = services.findIndex(s => s.id === id); if (idx !== -1) services[idx] = item; }
+  else services.push(item);
+  setData('services', services);
+  closeModal('serviceModal');
+  renderServices();
+  showToast('Service saved!', 'success');
+}
+function toggleService(id) {
+  const services = getData('services', []);
+  const idx = services.findIndex(s => s.id === id);
+  if (idx !== -1) { services[idx].active = !services[idx].active; setData('services', services); }
+}
+function deleteService(id) {
+  if (!confirm('Delete this service?')) return;
+  setData('services', getData('services', []).filter(s => s.id !== id));
+  renderServices();
+}
+
+// ==================== SETTINGS ====================
+function loadSettings() {
+  const s = getData('settings', {});
+  document.getElementById('setBizName').value = s.bizName || '';
+  document.getElementById('setBizContact').value = s.contact || '';
+  document.getElementById('setBizHours').value = s.hours || '';
+  document.getElementById('setBizAddress').value = s.address || '';
+  document.getElementById('setBizFooter').value = s.footer || '';
+  document.getElementById('setMinCharge').value = s.minCharge || '';
+  document.getElementById('setRushFee').value = s.rushFee || '';
+  document.getElementById('setDeliveryFee').value = s.deliveryFee || '';
+  document.getElementById('setSpecialFee').value = s.specialFee || '';
+}
+function saveSettings() {
+  setData('settings', {
+    bizName: document.getElementById('setBizName').value,
+    contact: document.getElementById('setBizContact').value,
+    hours: document.getElementById('setBizHours').value,
+    address: document.getElementById('setBizAddress').value,
+    footer: document.getElementById('setBizFooter').value,
+    minCharge: parseFloat(document.getElementById('setMinCharge').value) || 80,
+    rushFee: parseFloat(document.getElementById('setRushFee').value) || 30,
+    deliveryFee: parseFloat(document.getElementById('setDeliveryFee').value) || 50,
+    specialFee: parseFloat(document.getElementById('setSpecialFee').value) || 150
+  });
+  showToast('Settings saved!', 'success');
+}
+
+// ==================== UI HELPERS ====================
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+function showToast(msg, type = 'success') {
+  const tc = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+  t.innerHTML = `<span>${icons[type] || '✅'}</span><span>${msg}</span>`;
+  tc.appendChild(t);
+  setTimeout(() => { t.style.animation = 'toastOut 0.3s ease forwards'; setTimeout(() => t.remove(), 300); }, 3000);
+}
+function emptyState(icon, msg) {
+  return `<div class="empty-state"><div class="empty-state-icon">${icon}</div><h3>${msg}</h3><p>Nothing to show here yet.</p></div>`;
+}
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', function(e) { if (e.target === this) this.classList.remove('active'); });
+});
+
+// ==================== INIT ====================
+window.addEventListener('load', () => {
+  initData();
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+    setTimeout(() => {
+      document.getElementById('splash').style.display = 'none';
+      document.getElementById('authPage').style.display = 'flex';
+    }, 600);
+  }, 2200);
+});
+
+// Handle window resize
+window.addEventListener('resize', () => {
+  if (currentPage === 'orders') renderOrders();
+});
+
+// Keyboard shortcut: Enter on login
+document.getElementById('loginPass')?.addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>
