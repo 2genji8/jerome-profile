@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mr. Labandero — Business Manager</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal-900:#0B3B39;
+    --teal-800:#0F4C4A;
+    --teal-700:#146B67;
+    --teal-100:#E4F2F0;
+    --sun:#FFB443;
+    --coral:#FF6B4A;
+    --cream:#FBF8F2;
+    --ink:#1C2624;
+    --gray-500:#6B7A78;
+    --gray-200:#DDE6E4;
+    --ok:#2E9E63;
+    --warn:#D64545;
+    --radius:14px;
+    --shadow: 0 4px 18px rgba(11,59,57,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Inter',sans-serif;background:var(--cream);color:var(--ink);}
+  h1,h2,h3,.display{font-family:'Poppins',sans-serif;}
+  ::-webkit-scrollbar{width:10px;height:10px;}
+  ::-webkit-scrollbar-thumb{background:var(--gray-200);border-radius:8px;}
+
+  /* Layout */
+  .app{display:grid;grid-template-columns:230px 1fr;min-height:100vh;}
+  .sidebar{background:var(--teal-900);color:#fff;padding:22px 14px;display:flex;flex-direction:column;gap:4px;}
+  .brand{display:flex;align-items:center;gap:10px;padding:6px 10px 22px 10px;}
+  .brand .mark{width:36px;height:36px;border-radius:10px;background:var(--sun);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 3px 0 rgba(0,0,0,0.15) inset;}
+  .brand .name{font-family:'Poppins',sans-serif;font-weight:800;font-size:15px;line-height:1.1;}
+  .brand .name span{display:block;font-family:'Inter',sans-serif;font-weight:500;font-size:11px;color:#9FC6C3;}
+  nav button{all:unset;cursor:pointer;padding:11px 14px;border-radius:10px;font-size:13.5px;font-weight:600;color:#CFE6E4;display:flex;align-items:center;gap:10px;transition:.15s;}
+  nav button:hover{background:rgba(255,255,255,0.06);color:#fff;}
+  nav button.active{background:var(--sun);color:var(--teal-900);}
+  nav .grp{margin-top:16px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#5E8683;padding:0 14px 6px;}
+  .conn{margin-top:auto;padding:10px 12px;border-radius:10px;background:rgba(255,255,255,0.06);font-size:11.5px;color:#9FC6C3;}
+  .conn .dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+  .dot.on{background:var(--ok);}
+  .dot.off{background:var(--warn);}
+
+  main{padding:26px 32px;max-width:1400px;}
+  .topbar{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;gap:20px;flex-wrap:wrap;}
+  .topbar h1{font-size:24px;margin:0 0 4px;}
+  .topbar p{margin:0;color:var(--gray-500);font-size:13.5px;}
+  .actions{display:flex;gap:10px;}
+  button.btn{all:unset;cursor:pointer;padding:10px 16px;border-radius:10px;font-weight:700;font-size:13px;font-family:'Inter',sans-serif;}
+  .btn.primary{background:var(--teal-800);color:#fff;}
+  .btn.primary:hover{background:var(--teal-700);}
+  .btn.ghost{background:#fff;color:var(--teal-800);border:1px solid var(--gray-200);}
+  .btn.ghost:hover{border-color:var(--teal-700);}
+  .btn.coral{background:var(--coral);color:#fff;}
+  .btn.small{padding:6px 10px;font-size:12px;border-radius:8px;}
+
+  /* Setup banner */
+  .banner{background:#FFF3E0;border:1px solid #FFDBA6;color:#7A4B00;padding:14px 18px;border-radius:12px;margin-bottom:20px;font-size:13.5px;line-height:1.55;}
+  .banner code{background:#fff;padding:2px 6px;border-radius:5px;font-size:12px;}
+  .banner input{width:100%;margin-top:8px;padding:9px 11px;border-radius:8px;border:1px solid #FFDBA6;font-size:13px;font-family:inherit;}
+
+  /* KPI cards */
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin-bottom:22px;}
+  .kpi{background:linear-gradient(135deg,var(--teal-800),var(--teal-900));color:#fff;border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);}
+  .kpi .lbl{font-size:11.5px;letter-spacing:.05em;text-transform:uppercase;color:#B9DAD7;font-weight:600;}
+  .kpi .val{font-family:'Poppins',sans-serif;font-size:26px;font-weight:800;margin-top:6px;}
+  .kpi.warn{background:linear-gradient(135deg,#B44328,#7A2C18);}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px;}
+  @media (max-width:900px){.grid2{grid-template-columns:1fr;} .app{grid-template-columns:1fr;} .sidebar{position:sticky;top:0;flex-direction:row;overflow-x:auto;z-index:5;} nav{display:flex;gap:4px;} .conn,.grp{display:none;}}
+
+  .card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:18px;}
+  .card h3{margin:0 0 12px;font-size:14.5px;}
+  .mini-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--gray-200);font-size:13px;}
+  .mini-row:last-child{border-bottom:none;}
+  .tag{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;}
+  .tag.ok{background:#DFF5E7;color:var(--ok);}
+  .tag.warn{background:#FBE1DE;color:var(--warn);}
+  .tag.mid{background:#FFF0D6;color:#B87700;}
+
+  /* Table */
+  .table-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .table-head{display:flex;justify-content:space-between;align-items:center;padding:16px 18px;border-bottom:1px solid var(--gray-200);gap:12px;flex-wrap:wrap;}
+  .search{padding:9px 12px;border-radius:9px;border:1px solid var(--gray-200);font-size:13px;font-family:inherit;width:220px;}
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  thead th{text-align:left;background:var(--teal-100);color:var(--teal-900);padding:11px 14px;font-size:11.5px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap;}
+  tbody td{padding:11px 14px;border-bottom:1px solid var(--gray-200);white-space:nowrap;}
+  tbody tr:hover{background:#FAFCFB;}
+  tbody tr:last-child td{border-bottom:none;}
+  .rowbtns{display:flex;gap:6px;}
+  .empty{padding:40px;text-align:center;color:var(--gray-500);font-size:13.5px;}
+
+  /* Modal */
+  .overlay{position:fixed;inset:0;background:rgba(11,25,24,0.45);display:none;align-items:center;justify-content:center;z-index:50;padding:20px;}
+  .overlay.show{display:flex;}
+  .modal{background:#fff;border-radius:16px;padding:24px;width:420px;max-width:100%;max-height:88vh;overflow:auto;}
+  .modal h3{margin:0 0 16px;}
+  .field{margin-bottom:13px;}
+  .field label{display:block;font-size:12px;font-weight:700;color:var(--gray-500);margin-bottom:5px;}
+  .field input,.field select,.field textarea{width:100%;padding:9px 11px;border-radius:9px;border:1px solid var(--gray-200);font-size:13.5px;font-family:inherit;}
+  .modal-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px;}
+  .toast{position:fixed;bottom:22px;right:22px;background:var(--teal-900);color:#fff;padding:12px 18px;border-radius:10px;font-size:13px;box-shadow:var(--shadow);z-index:60;opacity:0;transform:translateY(8px);transition:.25s;}
+  .toast.show{opacity:1;transform:translateY(0);}
+
+  /* Toggle switch */
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;margin-bottom:6px;}
+  .toggle-row .tlabel{font-size:13.5px;font-weight:600;}
+  .toggle-row .thint{font-size:11.5px;color:var(--gray-500);font-weight:500;}
+  .switch{position:relative;display:inline-block;width:44px;height:25px;flex:none;}
+  .switch input{opacity:0;width:0;height:0;}
+  .slider{position:absolute;cursor:pointer;inset:0;background:var(--gray-200);border-radius:30px;transition:.2s;}
+  .slider:before{content:"";position:absolute;height:19px;width:19px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;}
+  .switch input:checked + .slider{background:var(--coral);}
+  .switch input:checked + .slider:before{transform:translateX(19px);}
+
+  /* Amount readout */
+  .amount-box{background:var(--teal-100);border-radius:10px;padding:12px 14px;margin:4px 0 14px;display:flex;justify-content:space-between;align-items:center;}
+  .amount-box .alabel{font-size:12px;font-weight:700;color:var(--teal-800);}
+  .amount-box .aval{font-family:'Poppins',sans-serif;font-weight:800;font-size:19px;color:var(--teal-900);}
+  .amount-note{font-size:11px;color:var(--gray-500);margin-top:-8px;margin-bottom:14px;}
+
+  /* Checklist */
+  .checklist{border:1px solid var(--gray-200);border-radius:10px;max-height:220px;overflow:auto;}
+  .check-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--gray-200);}
+  .check-item:last-child{border-bottom:none;}
+  .check-item label{flex:1;font-size:13px;font-weight:600;}
+  .check-item .stockhint{font-size:11px;color:var(--gray-500);font-weight:500;}
+  .check-item input[type=number]{width:64px;padding:6px 8px;border-radius:7px;border:1px solid var(--gray-200);font-size:12.5px;}
+  .section-title{font-size:12px;font-weight:700;color:var(--gray-500);text-transform:uppercase;letter-spacing:.04em;margin:18px 0 8px;}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="mark">🧺</div>
+      <div class="name">Mr. Labandero<span>Business Manager</span></div>
+    </div>
+    <nav id="nav"></nav>
+    <div class="conn"><span class="dot off" id="connDot"></span><span id="connText">Not connected</span></div>
+  </aside>
+
+  <main>
+    <div id="setupBanner" class="banner" style="display:none">
+      <strong>Connect your Google Sheet.</strong> Deploy the provided Apps Script as a web app, then paste the deployment URL below. See the setup notes shared alongside this file for the one-time steps.
+      <input id="apiUrlInput" placeholder="https://script.google.com/macros/s/XXXXXXXX/exec">
+      <div style="margin-top:10px;"><button class="btn primary small" onclick="saveApiUrl()">Save & Connect</button></div>
+    </div>
+
+    <div class="topbar">
+      <div>
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSub">Live snapshot of the shop</p>
+      </div>
+      <div class="actions" id="pageActions"></div>
+    </div>
+
+    <div id="content"></div>
+  </main>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h3 id="modalTitle">Add</h3>
+    <div id="modalFields"></div>
+    <div class="modal-actions">
+      <button class="btn ghost" onclick="closeModal()">Cancel</button>
+      <button class="btn primary" onclick="submitModal()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+let API_URL = localStorage.getItem('ml_api_url') || '';
+
+const PESO = n => '₱' + (Number(n)||0).toLocaleString('en-PH',{minimumFractionDigits:2,maximumFractionDigits:2});
+
+const SHEETS = {
+  Orders: {
+    label:'Orders', icon:'🧾',
+    cols:['OrderID','Date','ClientName','Service','Loads','Rush','Deliver','DeliveryFee','Amount','Status','PaymentStatus'],
+    labels:{OrderID:'Order ID',Date:'Date',ClientName:'Client',Service:'Service',Loads:'Loads',Rush:'Rush',Deliver:'Deliver',DeliveryFee:'Delivery Fee',Amount:'Amount',Status:'Status',PaymentStatus:'Payment'},
+    types:{Date:'date',Amount:'number',Loads:'number',DeliveryFee:'number',Status:{select:['Pending','Washing','Ready for Pickup','Claimed','Cancelled']},PaymentStatus:{select:['Paid','Unpaid','Partial']}},
+    fmt:{Amount:PESO, DeliveryFee:PESO},
+    genId: rows => 'OD-' + String(rows.length+1).padStart(4,'0')
+  },
+  Clients: {
+    label:'Clients', icon:'👤',
+    cols:['ClientID','Name','Contact','Address','Email','Notes'],
+    labels:{ClientID:'Client ID',Name:'Name',Contact:'Contact #',Address:'Address',Email:'Email',Notes:'Notes'},
+    types:{}, fmt:{},
+    genId: rows => 'CL-' + String(rows.length+1).padStart(4,'0')
+  },
+  Services: {
+    label:'Services', icon:'🧼',
+    cols:['ServiceID','Name','Unit','Price','Notes'],
+    labels:{ServiceID:'Service ID',Name:'Service Name',Unit:'Unit',Price:'Price',Notes:'Notes'},
+    types:{Price:'number'}, fmt:{Price:PESO},
+    genId: rows => 'SV-' + String(rows.length+1).padStart(2,'0')
+  },
+  Inventory: {
+    label:'Inventory', icon:'📦',
+    cols:['ItemID','Name','Unit','Qty','ReorderLevel','UnitCost'],
+    labels:{ItemID:'Item ID',Name:'Item',Unit:'Unit',Qty:'Starting Stock',ReorderLevel:'Reorder Level',UnitCost:'Unit Cost'},
+    types:{Qty:'number',ReorderLevel:'number',UnitCost:'number'}, fmt:{UnitCost:PESO},
+    genId: rows => 'IT-' + String(rows.length+1).padStart(2,'0')
+  },
+  InventoryLog: {
+    label:'Inventory Log', icon:'📋',
+    cols:['LogID','Date','ItemName','Type','Quantity','Reference','RecordedBy'],
+    labels:{LogID:'Log ID',Date:'Date',ItemName:'Item',Type:'Type',Quantity:'Qty',Reference:'Reference',RecordedBy:'By'},
+    types:{Date:'date',Quantity:'number',ItemName:{selectFrom:'Inventory'},Type:{select:['In','Out']}}, fmt:{},
+    genId: rows => 'LG-' + String(rows.length+1).padStart(4,'0')
+  },
+  Expenses: {
+    label:'Expenses', icon:'💸',
+    cols:['ExpenseID','Date','Category','Description','Amount','PaidBy'],
+    labels:{ExpenseID:'Expense ID',Date:'Date',Category:'Category',Description:'Description',Amount:'Amount',PaidBy:'Paid By'},
+    types:{Date:'date',Amount:'number',Category:{select:['Utilities','Rent','Supplies','Wages','Maintenance','Transportation','Other']}}, fmt:{Amount:PESO},
+    genId: rows => 'EX-' + String(rows.length+1).padStart(4,'0')
+  },
+  Users: {
+    label:'Users', icon:'🧑‍💼',
+    cols:['UserID','Name','Role','Contact','DateHired','Status'],
+    labels:{UserID:'User ID',Name:'Name',Role:'Role',Contact:'Contact #',DateHired:'Date Hired',Status:'Status'},
+    types:{DateHired:'date',Role:{select:['Admin','Cashier','Staff']},Status:{select:['Active','Inactive']}}, fmt:{},
+    genId: rows => 'US-' + String(rows.length+1).padStart(4,'0')
+  },
+  Attendance: {
+    label:'Attendance', icon:'🕒',
+    cols:['Date','Employee','TimeIn','TimeOut','Status'],
+    labels:{Date:'Date',Employee:'Employee',TimeIn:'Time In',TimeOut:'Time Out',Status:'Status'},
+    types:{Date:'date',TimeIn:'time',TimeOut:'time',Status:{select:['Present','Late','Absent','Leave','Half Day']}}, fmt:{},
+    genId: null
+  },
+  Payroll: {
+    label:'Payroll', icon:'💰',
+    cols:['Employee','RateType','Rate','HoursDays','SSS','PhilHealth','PagIBIG','CashAdvance','OtherDeductions','PeriodStart','PeriodEnd'],
+    labels:{Employee:'Employee',RateType:'Rate Type',Rate:'Rate',HoursDays:'Hours Worked',SSS:'SSS',PhilHealth:'PhilHealth',PagIBIG:'Pag-IBIG',CashAdvance:'Cash Advance',OtherDeductions:'Other Ded.',PeriodStart:'Period Start',PeriodEnd:'Period End'},
+    types:{Rate:'number',HoursDays:'number',SSS:'number',PhilHealth:'number',PagIBIG:'number',CashAdvance:'number',OtherDeductions:'number',PeriodStart:'date',PeriodEnd:'date',RateType:{select:['Hourly','Daily','Monthly']}}, fmt:{},
+    genId: null
+  }
+};
+const NAV_ORDER = ['Dashboard','Orders','Clients','Services','Inventory','InventoryLog','Expenses','Users','Attendance','Payroll'];
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let DATA = {};
+let currentTab = 'Dashboard';
+let modalCtx = null; // {sheet, row}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+function buildNav(){
+  const nav = document.getElementById('nav');
+  nav.innerHTML = '';
+  NAV_ORDER.forEach(key=>{
+    const btn = document.createElement('button');
+    btn.dataset.tab = key;
+    const icon = key==='Dashboard' ? '📊' : SHEETS[key].icon;
+    const label = key==='Dashboard' ? 'Dashboard' : SHEETS[key].label;
+    btn.innerHTML = `<span>${icon}</span> ${label}`;
+    btn.onclick = ()=>switchTab(key);
+    nav.appendChild(btn);
+  });
+  markActive();
+}
+function markActive(){
+  document.querySelectorAll('#nav button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.tab===currentTab);
+  });
+}
+function switchTab(key){
+  currentTab = key;
+  markActive();
+  render();
+}
+
+/* ============================================================
+   API
+   ============================================================ */
+function saveApiUrl(){
+  const val = document.getElementById('apiUrlInput').value.trim();
+  if(!val){ toast('Paste your Apps Script URL first'); return; }
+  API_URL = val;
+  localStorage.setItem('ml_api_url', val);
+  loadAll();
+}
+function setConn(ok){
+  document.getElementById('connDot').className = 'dot ' + (ok?'on':'off');
+  document.getElementById('connText').textContent = ok ? 'Connected to Sheet' : 'Not connected';
+  document.getElementById('setupBanner').style.display = ok ? 'none' : 'block';
+}
+async function apiGet(params){
+  const url = API_URL + '?' + new URLSearchParams(params).toString();
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('Network error');
+  const json = await res.json();
+  if(json.error) throw new Error(json.error);
+  return json;
+}
+function b64(obj){
+  return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+}
+async function loadAll(){
+  if(!API_URL){ setConn(false); render(); return; }
+  try{
+    const json = await apiGet({action:'listAll'});
+    DATA = json;
+    setConn(true);
+  }catch(err){
+    setConn(false);
+    toast('Could not reach the sheet: ' + err.message);
+  }
+  render();
+}
+async function refreshSheet(sheet){
+  const json = await apiGet({action:'list', sheet});
+  DATA[sheet] = json.rows;
+}
+
+/* ============================================================
+   RENDER — ROUTER
+   ============================================================ */
+function render(){
+  const titleEl = document.getElementById('pageTitle');
+  const subEl = document.getElementById('pageSub');
+  const actionsEl = document.getElementById('pageActions');
+  const contentEl = document.getElementById('content');
+  actionsEl.innerHTML = '';
+  document.getElementById('setupBanner').style.display = API_URL ? 'none' : 'block';
+
+  if(currentTab==='Dashboard'){
+    titleEl.textContent = 'Dashboard';
+    subEl.textContent = "Today's snapshot — auto-computed from Orders and Expenses";
+    actionsEl.innerHTML = `<button class="btn ghost" onclick="loadAll()">↻ Refresh</button>`;
+    contentEl.innerHTML = renderDashboard();
+    return;
+  }
+
+  const cfg = SHEETS[currentTab];
+  titleEl.textContent = cfg.label;
+  subEl.textContent = `${(DATA[currentTab]||[]).length} record(s)`;
+  actionsEl.innerHTML = `
+    <button class="btn ghost" onclick="loadAll()">↻ Refresh</button>
+    ${cfg.genId || true ? `<button class="btn primary" onclick="openModal('${currentTab}')">+ Add ${cfg.label.replace(/s$/,'')}</button>` : ''}
+  `;
+  contentEl.innerHTML = renderTable(currentTab);
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  if(!API_URL){
+    return `<div class="empty">Connect your Google Sheet above to see live numbers.</div>`;
+  }
+  const orders = DATA.Orders||[];
+  const expenses = DATA.Expenses||[];
+  const inventory = DATA.Inventory||[];
+  const invLog = DATA.InventoryLog||[];
+  const today = new Date().toISOString().slice(0,10);
+  const monthStart = today.slice(0,7)+'-01';
+
+  const active = orders.filter(o=>!['Claimed','Cancelled'].includes(o.Status)).length;
+  const todaySales = orders.filter(o=>String(o.Date).slice(0,10)===today).reduce((s,o)=>s+Number(o.Amount||0),0);
+  const mtdSales = orders.filter(o=>String(o.Date).slice(0,10)>=monthStart).reduce((s,o)=>s+Number(o.Amount||0),0);
+  const mtdExpenses = expenses.filter(x=>String(x.Date).slice(0,10)>=monthStart).reduce((s,x)=>s+Number(x.Amount||0),0);
+  const net = mtdSales - mtdExpenses;
+
+  const statusCounts = {};
+  ['Pending','Washing','Ready for Pickup','Claimed','Cancelled'].forEach(s=>statusCounts[s]=0);
+  orders.forEach(o=>{ if(statusCounts[o.Status]!==undefined) statusCounts[o.Status]++; });
+
+  const catTotals = {};
+  expenses.filter(x=>String(x.Date).slice(0,10)>=monthStart).forEach(x=>{
+    catTotals[x.Category] = (catTotals[x.Category]||0) + Number(x.Amount||0);
+  });
+
+  const stockFor = name => {
+    const item = inventory.find(it=>it.Name===name);
+    let stock = item ? Number(item.Qty||0) : 0;
+    invLog.forEach(l=>{
+      if(l.ItemName!==name) return;
+      stock += l.Type==='In' ? Number(l.Quantity||0) : -Number(l.Quantity||0);
+    });
+    return stock;
+  };
+  const lowStock = inventory.filter(it => stockFor(it.Name) <= Number(it.ReorderLevel||0));
+
+  return `
+    <div class="kpis">
+      <div class="kpi"><div class="lbl">Active Orders</div><div class="val">${active}</div></div>
+      <div class="kpi"><div class="lbl">Today's Sales</div><div class="val">${PESO(todaySales)}</div></div>
+      <div class="kpi"><div class="lbl">Month-to-Date Sales</div><div class="val">${PESO(mtdSales)}</div></div>
+      <div class="kpi ${net<0?'warn':''}"><div class="lbl">MTD Net</div><div class="val">${PESO(net)}</div></div>
+    </div>
+    <div class="grid2">
+      <div class="card">
+        <h3>Orders by Status</h3>
+        ${Object.entries(statusCounts).map(([s,c])=>`<div class="mini-row"><span>${s}</span><strong>${c}</strong></div>`).join('')}
+      </div>
+      <div class="card">
+        <h3>MTD Expenses by Category</h3>
+        ${Object.keys(catTotals).length ? Object.entries(catTotals).map(([c,v])=>`<div class="mini-row"><span>${c}</span><strong>${PESO(v)}</strong></div>`).join('') : '<div class="empty">No expenses logged this month</div>'}
+      </div>
+    </div>
+    <div class="card">
+      <h3>⚠️ Low Stock (at or below reorder level)</h3>
+      ${lowStock.length ? lowStock.map(it=>`<div class="mini-row"><span>${it.Name}</span><span class="tag warn">${stockFor(it.Name)} ${it.Unit} left</span></div>`).join('') : '<div class="empty">Everything is stocked</div>'}
+    </div>
+  `;
+}
+
+/* ============================================================
+   TABLE VIEW
+   ============================================================ */
+function renderTable(sheet){
+  const cfg = SHEETS[sheet];
+  const rows = DATA[sheet]||[];
+  if(!API_URL){
+    return `<div class="empty">Connect your Google Sheet above to load ${cfg.label.toLowerCase()}.</div>`;
+  }
+  let extraCol = '';
+  let extraHead = '';
+  if(sheet==='Inventory'){ extraHead = '<th>Stock</th><th>Status</th>'; }
+  if(sheet==='Payroll'){ extraHead = '<th>Gross</th><th>Net</th>'; }
+
+  const bodyRows = rows.map(r=>{
+    let cells = cfg.cols.map(c=>{
+      let v = r[c];
+      if(cfg.fmt[c]) v = cfg.fmt[c](v);
+      if(c==='Status' || c==='PaymentStatus'){
+        const cls = ['Paid','Ready for Pickup','Claimed','Active','OK','Present'].includes(v)?'ok':(['Unpaid','Cancelled','Inactive','Absent'].includes(v)?'warn':'mid');
+        v = `<span class="tag ${cls}">${v??''}</span>`;
+      }
+      return `<td>${v??''}</td>`;
+    }).join('');
+
+    if(sheet==='Inventory'){
+      const invLog = DATA.InventoryLog||[];
+      let stock=Number(r.Qty||0);
+      invLog.forEach(l=>{ if(l.ItemName===r.Name) stock += l.Type==='In'?Number(l.Quantity||0):-Number(l.Quantity||0); });
+      const low = stock<=Number(r.ReorderLevel||0);
+      cells += `<td>${stock}</td><td><span class="tag ${low?'warn':'ok'}">${low?'REORDER':'OK'}</span></td>`;
+    }
+    if(sheet==='Payroll'){
+      const att = DATA.Attendance||[];
+      const hrs = r.HoursDays || sumHours(att, r.Employee, r.PeriodStart, r.PeriodEnd);
+      const gross = r.RateType==='Monthly' ? Number(r.Rate||0) : Number(r.Rate||0)*Number(hrs||0);
+      const ded = Number(r.SSS||0)+Number(r.PhilHealth||0)+Number(r.PagIBIG||0)+Number(r.CashAdvance||0)+Number(r.OtherDeductions||0);
+      cells += `<td>${PESO(gross)}</td><td><strong>${PESO(gross-ded)}</strong></td>`;
+    }
+
+    return `<tr>${cells}<td class="rowbtns">
+      <button class="btn small ghost" onclick="openModal('${sheet}', ${r._row})">Edit</button>
+      <button class="btn small coral" onclick="removeRow('${sheet}', ${r._row})">Delete</button>
+    </td></tr>`;
+  }).join('');
+
+  return `
+    <div class="table-wrap">
+      <div class="table-head">
+        <input class="search" placeholder="Search ${cfg.label.toLowerCase()}..." oninput="filterTable(this)">
+      </div>
+      <div style="overflow-x:auto">
+      <table>
+        <thead><tr>${cfg.cols.map(c=>`<th>${cfg.labels[c]||c}</th>`).join('')}${extraHead}<th></th></tr></thead>
+        <tbody>${bodyRows || `<tr><td colspan="${cfg.cols.length+2}"><div class="empty">No records yet — click "Add" to create one.</div></td></tr>`}</tbody>
+      </table>
+      </div>
+    </div>
+  `;
+}
+function sumHours(att, employee, start, end){
+  let total=0;
+  att.forEach(a=>{
+    if(a.Employee!==employee) return;
+    const d = String(a.Date).slice(0,10);
+    if(start && d<String(start).slice(0,10)) return;
+    if(end && d>String(end).slice(0,10)) return;
+    if(!a.TimeIn || !a.TimeOut) return;
+    const [ih,im]=String(a.TimeIn).split(':').map(Number);
+    const [oh,om]=String(a.TimeOut).split(':').map(Number);
+    if(isNaN(ih)||isNaN(oh)) return;
+    total += (oh+om/60)-(ih+im/60);
+  });
+  return Math.max(total,0);
+}
+function filterTable(input){
+  const q = input.value.toLowerCase();
+  const rows = document.querySelectorAll('.table-wrap tbody tr');
+  rows.forEach(r=>{ r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none'; });
+}
+
+/* ============================================================
+   MODAL (Add / Edit)
+   ============================================================ */
+function openModal(sheet, rowNum){
+  if(sheet==='Orders') return openOrderModal(rowNum);
+
+  const cfg = SHEETS[sheet];
+  const rows = DATA[sheet]||[];
+  const existing = rowNum ? rows.find(r=>r._row===rowNum) : null;
+  modalCtx = {sheet, row: rowNum||null};
+
+  document.getElementById('modalTitle').textContent = (existing?'Edit ':'Add ') + cfg.label.replace(/s$/,'');
+  const fieldsEl = document.getElementById('modalFields');
+  fieldsEl.innerHTML = cfg.cols.map(c=>{
+    const t = cfg.types[c];
+    const isDate = t==='date';
+    let val = existing ? (existing[c]??'') : '';
+    if(!existing && !val){
+      if(c===cfg.cols[0] && cfg.genId) val = cfg.genId(rows);
+      else if(isDate) val = new Date().toISOString().slice(0,10);
+    }
+    const isIdField = cfg.genId && c===cfg.cols[0];
+    if(t && t.select){
+      return `<div class="field"><label>${cfg.labels[c]}</label>
+        <select data-field="${c}">${t.select.map(o=>`<option value="${o}" ${val===o?'selected':''}>${o}</option>`).join('')}</select></div>`;
+    }
+    if(t && t.selectFrom){
+      const opts = (DATA[t.selectFrom]||[]).map(r=>r.Name).filter(Boolean);
+      return `<div class="field"><label>${cfg.labels[c]}</label>
+        <select data-field="${c}">${opts.map(o=>`<option value="${o}" ${val===o?'selected':''}>${o}</option>`).join('')}</select></div>`;
+    }
+    const inputType = isDate ? 'date' : t==='time' ? 'time' : t==='number' ? 'number' : 'text';
+    return `<div class="field"><label>${cfg.labels[c]}</label>
+      <input data-field="${c}" type="${inputType}" value="${val}" ${isIdField?'readonly':''} ${t==='number'?'step="any"':''}></div>`;
+  }).join('');
+
+  document.getElementById('overlay').classList.add('show');
+}
+function closeModal(){
+  document.getElementById('overlay').classList.remove('show');
+  modalCtx = null;
+}
+/* ---- Orders: custom modal (searchable client, service dropdown, loads,
+       rush/deliver toggles, auto amount, inventory checklist) ---- */
+function openOrderModal(rowNum){
+  const rows = DATA.Orders||[];
+  const existing = rowNum ? rows.find(r=>r._row===rowNum) : null;
+  modalCtx = {sheet:'Orders', row: rowNum||null};
+
+  const clients = DATA.Clients||[];
+  const services = DATA.Services||[];
+  const inventory = DATA.Inventory||[];
+
+  const orderId = existing ? existing.OrderID : SHEETS.Orders.genId(rows);
+  const date = existing ? existing.Date : new Date().toISOString().slice(0,10);
+  const clientName = existing ? existing.ClientName : '';
+  const serviceName = existing ? existing.Service : (services[0]?services[0].Name:'');
+  const loads = existing ? existing.Loads : 1;
+  const rush = existing ? existing.Rush==='Yes' : false;
+  const deliver = existing ? existing.Deliver==='Yes' : false;
+  const deliveryFee = existing ? (existing.DeliveryFee||0) : 0;
+  const status = existing ? existing.Status : 'Pending';
+  const payStatus = existing ? existing.PaymentStatus : 'Unpaid';
+
+  document.getElementById('modalTitle').textContent = existing ? 'Edit Order' : 'Add Order';
+  document.getElementById('modalFields').innerHTML = `
+    <div class="field"><label>Order ID</label><input data-o="OrderID" type="text" value="${orderId}" readonly></div>
+    <div class="field"><label>Date</label><input data-o="Date" type="date" value="${date}"></div>
+
+    <div class="field"><label>Client</label>
+      <input data-o="ClientName" list="clientsDatalist" placeholder="Search or type client name" value="${clientName}">
+      <datalist id="clientsDatalist">${clients.map(c=>`<option value="${c.Name}">`).join('')}</datalist>
+    </div>
+
+    <div class="field"><label>Service</label>
+      <select data-o="Service" onchange="toggleSuppliesSection(); recalcOrderAmount();">
+        ${services.map(s=>`<option value="${s.Name}" data-price="${s.Price}" ${s.Name===serviceName?'selected':''}>${s.Name} — ${PESO(s.Price)} / ${s.Unit}</option>`).join('')}
+      </select>
+    </div>
+
+    <div class="field"><label>Loads</label>
+      <input data-o="Loads" type="number" min="1" step="1" value="${loads}" oninput="recalcOrderAmount()">
+    </div>
+
+    <div class="toggle-row">
+      <div><div class="tlabel">Rush order</div><div class="thint">Adds ₱30 to the total</div></div>
+      <label class="switch"><input type="checkbox" data-o="Rush" ${rush?'checked':''} onchange="recalcOrderAmount()"><span class="slider"></span></label>
+    </div>
+
+    <div class="toggle-row">
+      <div><div class="tlabel">Deliver</div><div class="thint">Enter delivery cost if on</div></div>
+      <label class="switch"><input type="checkbox" data-o="Deliver" id="deliverToggle" ${deliver?'checked':''} onchange="toggleDeliveryFee()"><span class="slider"></span></label>
+    </div>
+    <div class="field" id="deliveryFeeField" style="display:${deliver?'block':'none'}">
+      <label>Delivery Fee</label>
+      <input data-o="DeliveryFee" type="number" min="0" step="any" value="${deliveryFee}" oninput="recalcOrderAmount()">
+    </div>
+
+    <div class="amount-box"><span class="alabel">TOTAL AMOUNT</span><span class="aval" id="orderAmountVal">₱0.00</span></div>
+    <div class="amount-note">Loads × service price, plus rush and delivery fees if enabled.</div>
+
+    <div class="field"><label>Status</label>
+      <select data-o="Status">${['Pending','Washing','Ready for Pickup','Claimed','Cancelled'].map(s=>`<option ${s===status?'selected':''}>${s}</option>`).join('')}</select>
+    </div>
+    <div class="field"><label>Payment Status</label>
+      <select data-o="PaymentStatus">${['Paid','Unpaid','Partial'].map(s=>`<option ${s===payStatus?'selected':''}>${s}</option>`).join('')}</select>
+    </div>
+
+    ${!existing ? `
+    <div class="section-title" id="suppliesTitle" style="display:none">Supplies used</div>
+    <div class="amount-note" id="suppliesRequiredNote" style="display:none;color:var(--coral);font-weight:600;">Please pick at least 2 supplies for Full Service A.</div>
+    <div class="checklist" id="suppliesChecklist" style="display:none">
+      ${inventory.length ? inventory.map(it=>`
+        <div class="check-item">
+          <input type="checkbox" data-inv="${it.Name}" data-cost="${it.UnitCost||0}" onchange="document.getElementById('qty_${cssId(it.Name)}').disabled=!this.checked; recalcOrderAmount();">
+          <label>${it.Name}<div class="stockhint">${it.Unit} · ${PESO(it.UnitCost||0)} each</div></label>
+          <input type="number" id="qty_${cssId(it.Name)}" min="0" step="any" value="1" disabled oninput="recalcOrderAmount()">
+        </div>`).join('') : '<div class="empty">No inventory items yet</div>'}
+    </div>
+    <div class="amount-note" id="suppliesNote" style="display:none">Checked items are deducted from Inventory and their cost is added to the total. Full Service A gets a ₱40 discount on top; wash-type services don't.</div>
+    ` : `<div class="amount-note">Inventory deduction only applies when an order is first created.</div>`}
+  `;
+
+  document.getElementById('overlay').classList.add('show');
+  toggleSuppliesSection();
+  recalcOrderAmount();
+}
+function isFullServiceA(serviceName){
+  return (serviceName||'').toLowerCase().trim().includes('full service a');
+}
+function needsSupplies(serviceName){
+  const s = (serviceName||'').toLowerCase().trim();
+  return isFullServiceA(s) || s.includes('wash');
+}
+function suppliesAddCost(serviceName){
+  // Both Full Service A and wash-type services bill supplies into the total now.
+  return needsSupplies(serviceName);
+}
+function toggleSuppliesSection(){
+  const sel = document.querySelector('[data-o="Service"]');
+  if(!sel) return;
+  const show = needsSupplies(sel.value) && document.getElementById('suppliesChecklist');
+  ['suppliesTitle','suppliesChecklist','suppliesNote'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.style.display = show ? (id==='suppliesChecklist'?'block':'block') : 'none';
+  });
+  const reqNote = document.getElementById('suppliesRequiredNote');
+  if(reqNote) reqNote.style.display = (show && isFullServiceA(sel.value)) ? 'block' : 'none';
+  if(!show){
+    // uncheck everything when hidden so it doesn't silently affect totals/inventory
+    document.querySelectorAll('[data-inv]:checked').forEach(chk=>{ chk.checked=false; });
+  }
+}
+function cssId(s){ return String(s).replace(/[^a-zA-Z0-9]/g,'_'); }
+function toggleDeliveryFee(){
+  const on = document.getElementById('deliverToggle').checked;
+  document.getElementById('deliveryFeeField').style.display = on ? 'block' : 'none';
+  recalcOrderAmount();
+}
+function recalcOrderAmount(){
+  const sel = document.querySelector('[data-o="Service"]');
+  const price = sel ? Number(sel.selectedOptions[0]?.dataset.price||0) : 0;
+  const loads = Number(document.querySelector('[data-o="Loads"]')?.value||0);
+  const rush = document.querySelector('[data-o="Rush"]')?.checked;
+  const deliver = document.querySelector('[data-o="Deliver"]')?.checked;
+  const feeInput = document.querySelector('[data-o="DeliveryFee"]');
+  const fee = deliver ? Number(feeInput?.value||0) : 0;
+  let suppliesCost = 0;
+  if(sel && suppliesAddCost(sel.value)){
+    document.querySelectorAll('[data-inv]:checked').forEach(chk=>{
+      const qty = Number(document.getElementById('qty_'+cssId(chk.dataset.inv))?.value||0);
+      suppliesCost += qty * Number(chk.dataset.cost||0);
+    });
+  }
+  const total = Math.max(0, (price*loads) + (rush?30:0) + fee + suppliesCost - (sel && isFullServiceA(sel.value) ? 40 : 0));
+  document.getElementById('orderAmountVal').textContent = PESO(total);
+  return total;
+}
+async function submitOrderModal(){
+  const get = f => document.querySelector(`[data-o="${f}"]`);
+  const data = {
+    OrderID: get('OrderID').value,
+    Date: get('Date').value,
+    ClientName: get('ClientName').value,
+    Service: get('Service').value,
+    Loads: get('Loads').value,
+    Rush: get('Rush').checked ? 'Yes' : 'No',
+    Deliver: get('Deliver').checked ? 'Yes' : 'No',
+    DeliveryFee: get('Deliver').checked ? Number(get('DeliveryFee')?.value||0) : 0,
+    Amount: recalcOrderAmount(),
+    Status: get('Status').value,
+    PaymentStatus: get('PaymentStatus').value
+  };
+  if(!data.ClientName){ toast('Enter a client name'); return; }
+  if(!modalCtx.row && isFullServiceA(data.Service)){
+    const checkedCount = document.querySelectorAll('[data-inv]:checked').length;
+    if(checkedCount < 2){ toast('Please pick at least 2 supplies for Full Service A'); return; }
+  }
+
+  try{
+    if(modalCtx.row){
+      await apiGet({action:'update', sheet:'Orders', row:modalCtx.row, data:b64(data)});
+    }else{
+      await apiGet({action:'add', sheet:'Orders', data:b64(data)});
+      // log inventory usage, if any items were checked
+      const checks = document.querySelectorAll('[data-inv]:checked');
+      let logCount = (DATA.InventoryLog||[]).length;
+      for(const chk of checks){
+        logCount++;
+        const item = chk.dataset.inv;
+        const qty = Number(document.getElementById('qty_'+cssId(item)).value||0);
+        if(qty<=0) continue;
+        const logData = {
+          LogID: 'LG-' + String(logCount).padStart(4,'0'),
+          Date: data.Date,
+          ItemName: item,
+          Type: 'Out',
+          Quantity: qty,
+          Reference: `Order ${data.OrderID} — ${data.ClientName}`,
+          RecordedBy: 'System (Order)'
+        };
+        await apiGet({action:'add', sheet:'InventoryLog', data:b64(logData)});
+      }
+    }
+    toast(modalCtx.row ? 'Order updated' : 'Order added');
+    await refreshSheet('Orders');
+    await refreshSheet('InventoryLog');
+    await refreshSheet('Inventory');
+    closeModal();
+    render();
+  }catch(err){
+    toast('Error: '+err.message);
+  }
+}
+
+async function submitModal(){
+  if(!modalCtx) return;
+  const {sheet, row} = modalCtx;
+  if(sheet==='Orders') return submitOrderModal();
+  const data = {};
+  document.querySelectorAll('#modalFields [data-field]').forEach(el=>{
+    data[el.dataset.field] = el.value;
+  });
+  try{
+    if(row){
+      await apiGet({action:'update', sheet, row, data:b64(data)});
+      toast('Saved changes');
+    }else{
+      await apiGet({action:'add', sheet, data:b64(data)});
+      toast('Added successfully');
+    }
+    await refreshSheet(sheet);
+    closeModal();
+    render();
+  }catch(err){
+    toast('Error: '+err.message);
+  }
+}
+async function removeRow(sheet, row){
+  if(!confirm('Delete this record? This cannot be undone.')) return;
+  try{
+    await apiGet({action:'delete', sheet, row});
+    await refreshSheet(sheet);
+    toast('Deleted');
+    render();
+  }catch(err){
+    toast('Error: '+err.message);
+  }
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+let toastTimer;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 3200);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+buildNav();
+if(API_URL){ loadAll(); } else { render(); }
+</script>
+</body>
+</html>
